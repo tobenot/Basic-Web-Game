@@ -6,22 +6,33 @@
 
 > **[➡️ Try the Live Demo!](https://tobenot.top/Basic-Web-Game/)**
 
+[Demo Screenshot](./docs/assets/screenshot.webp)
+
+[![Play Beyond Books on Itch.io](./docs/assets/bb_screenshot.webp)](https://tobenot.itch.io/beyond-books)
+
 A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
 
 > **Note**: For detailed technical documentation, please refer to our **[Full Documentation](./docs/README.md)**.
 
 ---
 
+## Why Carrot Web Game Template?
+
+While you can always build a project from scratch with `create-react-app`, this template is specifically optimized for web game development, saving you from common setup headaches:
+
+-   **Game-Centric Architecture**: Separates the core engine (`carrot`) from game-specific logic (`games`), promoting organized, reusable code.
+-   **One-Command Deployments**: Built-in scripts for **itch.io** and **GitHub Pages** that automatically handle tricky path configurations, letting you focus on your game.
+-   **Essential Components Included**: Comes with pre-built, customizable components like `ImageLoader`, `TypewriterText`, and `GameShell` for aspect ratio and screen orientation control.
+
 ## ✨ Features
 
 -   **Modular Architecture**: Core engine (`carrot`) is separated from game-specific logic (`games`).
--   **React + TypeScript**: Modern, type-safe UI development with reusable core components like `ImageLoader` and `TypewriterText`.
+-   **React + TypeScript**: Modern, type-safe UI development with reusable core components.
 -   **Vite Powered**: Fast development server and optimized builds.
 -   **Automated Deployments**:
-    -   Built-in, one-command script (`npm run build:itch`) to version, build, and package your game for **itch.io**.
+    -   Built-in script (`npm run build:itch`) to version, build, and package your game for **itch.io**.
     -   Streamlined deployment to **GitHub Pages** via `npm run deploy`.
--   **Ready for Deployment**: Built-in scripts for easy deployment to **itch.io** and **GitHub Pages**.
--   **Easy to Customize**: Designed to be a clean starting point for your next web-based game.
+-   **Easy to Customize**: A clean starting point for your next web game.
 
 ## 🚀 Getting Started
 
@@ -78,17 +89,22 @@ A more detailed breakdown of the project structure is available in [our document
 
 ## 🎨 Customization
 
-To create your own game:
+To create your own game, follow the detailed guide in [our documentation](./docs/04-creation-and-extension.md).
 
-1.  Duplicate the `src/games/carrot-card-demo` directory and rename it.
-2.  Develop your game-specific logic, components, and types inside that new directory.
-3.  In `src/App.tsx`, change the import to point to your new game's main component.
+## 🗺️ Roadmap
 
-The detailed guide is in [our documentation](./docs/04-creation-and-extension.md).
+We have exciting plans for the future! Check out our **[Roadmap](./docs/ROADMAP.md)** to see what's next and how you can contribute.
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you have ideas for improvements or find a bug, please first read our **[Contribution Guide](./docs/06-contributing.md)**.
+Contributions are welcome! If you have ideas for improvements or find a bug, please first read our **[Contribution Guide](./docs/06-contributing.md)** and check out the issues page.
+
+### 💡 Help Wanted
+
+We are actively looking for help in the following areas:
+-   **More Core Components**: Ideas for reusable UI or logic components (e.g., `SoundManager`, `SpriteAnimation`).
+-   **Documentation**: Improving existing docs or adding translations.
+-   **Game Samples**: Creating more diverse game examples to showcase the engine's capabilities.
 
 ## 📄 License
 
