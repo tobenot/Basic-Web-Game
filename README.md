@@ -6,7 +6,7 @@
 
 A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
 
-> **Note**: For detailed technical documentation, please refer to [DOCUMENTATION.md](./DOCUMENTATION.md).
+> **Note**: For detailed technical documentation, please refer to our **[Full Documentation](./docs/README.md)**.
 
 ---
 
@@ -49,13 +49,14 @@ This will generate a `dist` directory with all your game files.
 -   **For itch.io**: Use `npm run build:itch`. This command automatically adjusts asset paths, making your game ready to upload.
 -   **For GitHub Pages**: Use `npm run deploy`. This will build your project and deploy it to GitHub Pages.
 
-> For more details on build commands and local testing, see the [Build and Deployment section in our documentation](./DOCUMENTATION.md#构建与部署).
+> For more details on build commands and local testing, see the [Build and Deployment section in our documentation](./docs/05-build-and-deploy.md).
 
 ## 📂 Project Structure
 
 ```
 /
 ├── dist/               # Production build output
+├── docs/               # Detailed project documentation
 ├── public/             # Static assets (images, fonts, config files)
 ├── src/                # Source code
 │   ├── carrot/         # The core engine/template
@@ -67,7 +68,7 @@ This will generate a `dist` directory with all your game files.
 └── ...
 ```
 
-A more detailed breakdown of the project structure is available in [DOCUMENTATION.md](./DOCUMENTATION.md#项目结构).
+A more detailed breakdown of the project structure is available in [our documentation](./docs/02-project-structure.md).
 
 ## 🎨 Customization
 
@@ -77,11 +78,11 @@ To create your own game:
 2.  Develop your game-specific logic, components, and types inside that new directory.
 3.  In `src/App.tsx`, change the import to point to your new game's main component.
 
-The detailed guide is in [DOCUMENTATION.md](./DOCUMENTATION.md#如何创建新游戏).
+The detailed guide is in [our documentation](./docs/04-creation-and-extension.md).
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you have ideas for improvements or find a bug, please open an issue or submit a pull request.
+Contributions are welcome! If you have ideas for improvements or find a bug, please first read our **[Contribution Guide](./docs/06-contributing.md)**.
 
 ## 📄 License
 
