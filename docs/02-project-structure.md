@@ -10,8 +10,13 @@
 ├── src/                # 项目源码
 │   ├── assets/         # 全局资源
 │   ├── carrot/         # 核心引擎/模板
-│   │   ├── components/ # 可复用的通用UI组件
-│   │   ├── services/   # 核心服务 (例如，资源加载)
+│   │   ├── components/
+│   │   │   ├── ImageLoader.tsx
+│   │   │   ├── TypewriterText.tsx
+│   │   │   ├── GameShell.tsx
+│   │   │   └── ScreenOrientationLock.tsx
+│   │   └── services/
+│   │       └── ResourceLoader.ts
 │   │   ├── types/      # 引擎的TypeScript类型定义
 │   │   └── ...
 │   ├── games/          # 存放所有具体游戏项目

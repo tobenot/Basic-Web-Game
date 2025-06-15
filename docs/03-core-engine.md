@@ -55,6 +55,23 @@ import TypewriterText from '@/src/carrot/components/TypewriterText';
     -   `fallbackSrc`: 加载失败时使用的回退图片文件名。
     -   `imageClass`, `placeholderClass`, `errorClass`: 用于自定义各状态下样式的 CSS 类。
 
+### `GameShell`
+
+一个可选的游戏"外壳"组件，用于提供屏幕方向锁定和固定的宽高比。
+
+-   **位置**: `src/carrot/components/GameShell.tsx`
+-   **用途**: 当您的游戏需要特定的屏幕方向（横屏或竖屏）时，用此组件包裹您的游戏主容器。
+-   **主要 Props**:
+    -   `orientation`: `'landscape'` (横屏) 或 `'portrait'` (竖屏)。
+    -   `children`: 您的游戏主组件。
+
+### `ScreenOrientationLock`
+
+一个由 `GameShell` 内部使用的组件，用于在屏幕方向不匹配时显示提示。
+
+-   **位置**: `src/carrot/components/ScreenOrientationLock.tsx`
+-   **用途**: 通常您不需要直接使用此组件，`GameShell` 会自动处理它。
+
 ## 核心服务
 
 ### `ResourceLoader`
