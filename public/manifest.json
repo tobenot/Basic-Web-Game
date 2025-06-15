@@ -1,0 +1,16 @@
+{
+  "name": "Carrot Game Template",
+  "short_name": "Carrot Game",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "start_url": ".",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "512x512",
+      "type": "image/ico"
+    }
+  ]
+} 
