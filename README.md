@@ -6,7 +6,7 @@
 
 > **[➡️ Try the Live Demo!](https://tobenot.top/Basic-Web-Game/)**
 
-[Demo Screenshot](./docs/assets/screenshot.webp)
+![Demo Screenshot](./docs/assets/screenshot.webp)
 
 [![Play Beyond Books on Itch.io](./docs/assets/bb_screenshot.webp)](https://tobenot.itch.io/beyond-books)
 
@@ -23,6 +23,17 @@ While you can always build a project from scratch with `create-react-app`, this 
 -   **Game-Centric Architecture**: Separates the core engine (`carrot`) from game-specific logic (`games`), promoting organized, reusable code.
 -   **One-Command Deployments**: Built-in scripts for **itch.io** and **GitHub Pages** that automatically handle tricky path configurations, letting you focus on your game.
 -   **Essential Components Included**: Comes with pre-built, customizable components like `ImageLoader`, `TypewriterText`, and `GameShell` for aspect ratio and screen orientation control.
+
+## 🗺️ Roadmap & TODO
+
+This template is actively evolving. Here are the key features planned for the near future. Contributions are highly welcome!
+
+-   [ ] **Core Systems**
+    -   [ ] **LLM/AI Integration**: A generic module for calling large language models, enabling dynamic narrative and NPC interactions.
+    -   [ ] **Audio Manager**: A robust service for handling background music and sound effects.
+    -   [ ] **Localization (i18n) System**: A simple framework for supporting multiple languages.
+-   [ ] **Performance Optimization**: Focus on code splitting and asset optimization for faster load times.
+-   [ ] **Backend Support**: Develop a companion backend template for handling player data or game state persistence. (Vision: [Basic-Web-Game-Backend](https://github.com/tobenot/Basic-Web-Game-Backend))
 
 ## ✨ Features
 
@@ -90,10 +101,6 @@ A more detailed breakdown of the project structure is available in [our document
 ## 🎨 Customization
 
 To create your own game, follow the detailed guide in [our documentation](./docs/04-creation-and-extension.md).
-
-## 🗺️ Roadmap
-
-We have exciting plans for the future! Check out our **[Roadmap](./docs/ROADMAP.md)** to see what's next and how you can contribute.
 
 ## 🤝 Contributing
 
