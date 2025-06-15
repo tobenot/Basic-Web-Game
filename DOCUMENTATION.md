@@ -150,4 +150,26 @@ npm run dev
 
 脚本还提供了简单的交互功能：
 *   在控制台输入 `q` 并回车，可以停止服务器。
-*   输入 `r` 并回车，可以重启服务器（在重启前会尝试运行 `dev-tool/encrypt_files.ps1` 脚本）。 
+*   输入 `r` 并回车，可以重启服务器（在重启前会尝试运行 `dev-tool/encrypt_files.ps1` 脚本）。
+
+### 自动化部署 (CI/CD)
+
+本项目包含一个预置的 GitHub Actions 工作流 (`.github/workflows/deploy-pages.yml`)，用于自动将您的游戏部署到 GitHub Pages。
+
+**工作原理:**
+*   当您向 `main` 或 `master` 分支推送代码时，此工作流会自动触发。
+*   它会执行 `build:pages` 脚本来构建项目。
+*   构建成功后，它会将 `dist` 目录下的内容自动部署到您的 GitHub Pages。
+
+**如何使用:**
+1.  确保您的仓库已经开启了 GitHub Pages 功能（在 `Settings` -> `Pages` 中，将 `Source` 设置为 `GitHub Actions`）。
+2.  将您的代码推送到 `main` 分支。
+3.  稍等片刻，GitHub Actions 完成后，您的游戏就会在 GitHub Pages 网址上生效。
+
+这个自动化流程取代了原有的 `npm run deploy` 手动部署方式，让部署过程更可靠、更高效。
+
+## 贡献指南
+
+我们欢迎任何形式的贡献！如果您有兴趣为这个项目添砖加瓦，无论是修复 Bug、提出新功能建议，还是帮助完善文档，都请先阅读我们的 [贡献指南](./.github/CONTRIBUTING.md)。
+
+该指南详细说明了如何提交代码、报告问题以及进行文档更新，遵循这些规范将有助于我们更好地协作。 
