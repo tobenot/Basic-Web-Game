@@ -1,16 +1,24 @@
 # Carrot Web Game Template
 
-A simple, modular, and extensible web game template based on React, TypeScript, and Vite.
+![Made with React & TypeScript](https://img.shields.io/badge/Made%20with-React%20%26%20TypeScript-blue.svg?style=for-the-badge&logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
-## Features
+A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
+
+> **Note**: For detailed technical documentation, please refer to [DOCUMENTATION.md](./DOCUMENTATION.md).
+
+---
+
+## ✨ Features
 
 -   **Modular Architecture**: Core engine (`carrot`) is separated from game-specific logic (`games`).
 -   **Vite Powered**: Fast development server and optimized builds.
 -   **React + TypeScript**: Modern, type-safe UI development.
--   **Simple Asset Loading**: Centralized resource loader for easy management of game assets.
--   **Easy to Customize**: Designed to be a clean starting point for any web-based game.
+-   **Ready for Deployment**: Built-in scripts for easy deployment to **itch.io** and **GitHub Pages**.
+-   **Easy to Customize**: Designed to be a clean starting point for your next web-based game.
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -30,46 +38,51 @@ A simple, modular, and extensible web game template based on React, TypeScript, 
     ```
     Your game will be running at `http://localhost:5173`.
 
-## Building for Production
+## 📦 Building for Production
 
-To create a production build, simply run:
-
+To create a production-ready build, run:
 ```bash
 npm run build
 ```
+This will generate a `dist` directory with all your game files.
 
-This will generate a `dist` directory. The contents of this directory are ready to be deployed to any static hosting service.
+-   **For itch.io**: Use `npm run build:itch`. This command automatically adjusts asset paths, making your game ready to upload.
+-   **For GitHub Pages**: Use `npm run deploy`. This will build your project and deploy it to GitHub Pages.
 
--   **For itch.io or similar platforms**: Simply upload the contents of the `dist` folder.
--   **For GitHub Pages**: This template uses the `gh-pages` package for easy deployment. For it to work correctly, ensure the `name` field in your `package.json` matches your GitHub repository name. Then, simply run `npm run deploy`.
+> For more details on build commands and local testing, see the [Build and Deployment section in our documentation](./DOCUMENTATION.md#构建与部署).
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 /
+├── dist/               # Production build output
 ├── public/             # Static assets (images, fonts, config files)
 ├── src/                # Source code
 │   ├── carrot/         # The core engine/template
-│   │   ├── components/ # Reusable, generic UI components
-│   │   └── services/   # Core services (e.g., ResourceLoader)
 │   ├── games/          # Houses all specific game projects
-│   │   └── demo-game/  # The example card game
-│   ├── App.tsx         # Main app component
-│   └── main.tsx        # Application entry point
-├── vite.config.ts      # Vite configuration
+│   └── ...
+├── scripts/
+│   └── post-build.js   # Script to fix paths for itch.io deployment
+├── .github/            # GitHub-specific files (e.g., workflows)
 └── ...
 ```
 
-## Customization
+A more detailed breakdown of the project structure is available in [DOCUMENTATION.md](./DOCUMENTATION.md#项目结构).
+
+## 🎨 Customization
 
 To create your own game:
 
-1.  Create a new directory inside `src/games/`, for example `my-awesome-game`.
-2.  Develop your game-specific components, services, and types inside that directory.
+1.  Duplicate the `src/games/carrot-card-demo` directory and rename it.
+2.  Develop your game-specific logic, components, and types inside that new directory.
 3.  In `src/App.tsx`, change the import to point to your new game's main component.
 
-## License
+The detailed guide is in [DOCUMENTATION.md](./DOCUMENTATION.md#如何创建新游戏).
 
-MIT License
+## 🤝 Contributing
 
-For more detailed documentation on the project structure, core engine, and how to create a new game, please see [DOCUMENTATION.md](./DOCUMENTATION.md).
+Contributions are welcome! If you have ideas for improvements or find a bug, please open an issue or submit a pull request.
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
