@@ -71,3 +71,5 @@ To create your own game:
 ## License
 
 MIT License
+
+For more detailed documentation on the project structure, core engine, and how to create a new game, please see [DOCUMENTATION.md](./DOCUMENTATION.md).
