@@ -1,0 +1,250 @@
+/* Carrot Card Demo Game Styles */
+
+/* Main Menu Styles */
+.main-menu-container {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	overflow: hidden;
+}
+
+.main-menu-container::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+	opacity: 0.3;
+}
+
+.main-menu-content {
+	position: relative;
+	z-index: 1;
+	text-align: center;
+	color: white;
+	max-width: 600px;
+	padding: 3rem;
+}
+
+.main-menu-header {
+	margin-bottom: 3rem;
+}
+
+.main-menu-title {
+	font-size: 3.5rem;
+	font-weight: 800;
+	margin-bottom: 1rem;
+	background: linear-gradient(45deg, #fff, #f0f8ff);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	letter-spacing: -0.02em;
+}
+
+.main-menu-subtitle {
+	font-size: 1.25rem;
+	opacity: 0.9;
+	font-weight: 300;
+	letter-spacing: 0.05em;
+}
+
+.main-menu-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.5rem;
+}
+
+.main-menu-start-btn {
+	background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+	border: none;
+	color: white;
+	font-size: 1.2rem;
+	font-weight: 600;
+	padding: 1rem 2.5rem;
+	border-radius: 50px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+
+.main-menu-start-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 35px rgba(238, 90, 36, 0.4);
+	background: linear-gradient(45deg, #ff7979, #fd79a8);
+}
+
+.main-menu-start-btn:active {
+	transform: translateY(0);
+}
+
+.main-menu-hint {
+	font-size: 0.9rem;
+	opacity: 0.7;
+	font-style: italic;
+}
+
+/* Card Styles */
+.card-container {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+	color: white;
+	overflow: hidden;
+}
+
+.card-illustration {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+	background: linear-gradient(45deg, #3a4a5c, #2c3e50);
+}
+
+.card-illustration img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.3s ease;
+}
+
+.card-illustration:hover img {
+	transform: scale(1.05);
+}
+
+.card-content {
+	padding: 2rem;
+	background: rgba(0, 0, 0, 0.8);
+	backdrop-filter: blur(10px);
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-name {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	color: #ecf0f1;
+	text-align: center;
+}
+
+.card-description {
+	font-size: 1.1rem;
+	line-height: 1.6;
+	margin-bottom: 2rem;
+	color: #bdc3c7;
+	text-align: center;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.card-choices {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.choice-button {
+	background: linear-gradient(45deg, #3498db, #2980b9);
+	border: none;
+	color: white;
+	padding: 0.8rem 1.5rem;
+	border-radius: 25px;
+	cursor: pointer;
+	font-size: 1rem;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+	min-width: 150px;
+}
+
+.choice-button:hover {
+	background: linear-gradient(45deg, #5dade2, #3498db);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.choice-button:active {
+	transform: translateY(0);
+}
+
+/* Loading and Error States */
+.game-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.9);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	z-index: 50;
+	backdrop-filter: blur(5px);
+}
+
+.game-overlay h2 {
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+.game-overlay p {
+	font-size: 1rem;
+	opacity: 0.8;
+	text-align: center;
+	max-width: 400px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.main-menu-title {
+		font-size: 2.5rem;
+	}
+	
+	.main-menu-content {
+		padding: 2rem;
+	}
+	
+	.card-content {
+		padding: 1.5rem;
+	}
+	
+	.card-name {
+		font-size: 1.5rem;
+	}
+	
+	.card-description {
+		font-size: 1rem;
+	}
+	
+	.choice-button {
+		min-width: 120px;
+		font-size: 0.9rem;
+	}
+}
+
+/* Animation for card transitions */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.card-container {
+	animation: fadeIn 0.5s ease-out;
+}
+
+.main-menu-content {
+	animation: fadeIn 0.8s ease-out;
+} 

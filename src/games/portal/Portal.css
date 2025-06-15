@@ -72,6 +72,14 @@
     text-align: center;
 }
 
+.game-card-description {
+    padding: 0 1rem 1rem;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+}
+
 .component-showcase {
     display: flex;
     flex-direction: column;

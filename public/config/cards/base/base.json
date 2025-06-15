@@ -1,35 +1,35 @@
 [
     {
         "id": "intro_event",
-        "name": "新的旅程",
+        "name": "The Journey Begins",
         "type": "event",
-        "description": "你站在一个十字路口。前方的道路充满未知，但冒险的感觉充满了你的内心。",
+        "description": "You stand at a crossroads. The path ahead is filled with mystery, but the thrill of adventure courses through your veins.",
         "illustration": "loc_wasteland",
         "choices": [
             {
-                "text": "向左走",
-                "description": "这条路又黑又窄。"
+                "text": "Take the left path",
+                "description": "This road is dark and narrow, shrouded in shadows."
             },
             {
-                "text": "向右走",
-                "description": "你看到远方有微弱的光。"
+                "text": "Take the right path",
+                "description": "You glimpse a faint light glowing in the distance."
             }
         ]
     },
     {
         "id": "find_item",
-        "name": "发现物品",
+        "name": "Mysterious Discovery",
         "type": "event",
-        "description": "在一个古老的箱子里，你发现了一件闪闪发光的物品。",
+        "description": "Within an ancient chest, you discover a gleaming artifact that pulses with otherworldly energy.",
         "illustration": "player_male_ecologist",
         "choices": [
             {
-                "text": "拾取",
-                "description": "它入手温润，似乎蕴含着某种力量。"
+                "text": "Take the artifact",
+                "description": "It feels warm to the touch and seems to contain hidden power."
             },
             {
-                "text": "离开",
-                "description": "还是不要随便碰来路不明的东西为好。"
+                "text": "Leave it behind",
+                "description": "Better not to meddle with objects of unknown origin."
             }
         ]
     }

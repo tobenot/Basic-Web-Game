@@ -19,12 +19,15 @@ export const Portal: React.FC = () => {
 						<Link to="/carrot-card-demo" className="game-card">
 							<ImageLoader
 								src="c001"
-								alt="Carrot Card Demo"
+								alt="Carrot Card Adventure"
 								basePath="/illustrations/"
 								fallbackSrc="default"
 								imageClass="game-card-img"
 							/>
-							<div className="game-card-title">Carrot Card Demo</div>
+							<div className="game-card-title">Carrot Card Adventure</div>
+							<div className="game-card-description">
+								An interactive storytelling experience where your choices shape the narrative
+							</div>
 						</Link>
 					</div>
 				</section>
@@ -35,7 +38,7 @@ export const Portal: React.FC = () => {
 						<div className="showcase-item">
 							<h3>TypewriterText</h3>
 							<div className="typewriter-demo">
-								<TypewriterText text="This is an example of the typewriter effect for immersive storytelling." enabled={true} />
+								<TypewriterText text="This component creates an immersive typewriter effect for storytelling and dialogue sequences." enabled={true} />
 							</div>
 						</div>
 						<div className="showcase-item">

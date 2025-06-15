@@ -3,6 +3,7 @@ import { Card as CardType } from '@/games/carrot-card-demo/types';
 import { cardService } from '@/games/carrot-card-demo/services/cardService';
 import { Card } from '@/games/carrot-card-demo/components/Card';
 import { MainMenu } from '@/games/carrot-card-demo/components/MainMenu';
+import '../styles/game.css';
 
 export function GameContainer() {
   const [currentCard, setCurrentCard] = useState<CardType | null>(null);
@@ -20,7 +21,7 @@ export function GameContainer() {
         setError(null);
       } catch (err) {
         console.error("Failed to initialize game:", err);
-        setError("游戏初始化失败，请检查配置或联系开发者。");
+        setError("Failed to initialize the game. Please check the configuration or contact the developer.");
       } finally {
         setIsLoading(false);
       }
@@ -32,12 +33,12 @@ export function GameContainer() {
   }, [isGameStarted]);
 
   const handleChoice = () => {
-    // 简化逻辑：总是抽下一张卡
+    // Simplified logic: always draw the next card
     const nextCard = cardService.drawCard();
     if (nextCard) {
       setCurrentCard(nextCard);
     } else {
-      setError("没有更多卡牌了！");
+      setError("No more cards available!");
     }
   };
 
@@ -51,9 +52,15 @@ export function GameContainer() {
       {!isGameStarted ? (
         <MainMenu onStart={handleGameStart} />
       ) : isLoading ? (
-        <div className="fixed inset-0 bg-neutral-dark/80 flex justify-center items-center text-white z-50">正在加载...</div>
+        <div className="game-overlay">
+          <h2>Loading...</h2>
+          <p>Preparing your adventure...</p>
+        </div>
       ) : error ? (
-        <div className="fixed inset-0 bg-neutral-dark/80 flex flex-col justify-center items-center text-white z-50">{error}</div>
+        <div className="game-overlay">
+          <h2>Error</h2>
+          <p>{error}</p>
+        </div>
       ) : currentCard ? (
         <Card
           key={currentCard.id}
@@ -61,7 +68,10 @@ export function GameContainer() {
           onChoice={handleChoice}
         />
       ) : (
-        <div className="fixed inset-0 bg-neutral-dark/80 flex flex-col justify-center items-center text-white z-50">游戏结束</div>
+        <div className="game-overlay">
+          <h2>Game Complete</h2>
+          <p>Thank you for playing!</p>
+        </div>
       )}
     </div>
   );
