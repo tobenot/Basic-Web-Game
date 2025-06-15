@@ -3,7 +3,6 @@ import { Card as CardType } from '@/games/carrot-card-demo/types';
 import { cardService } from '@/games/carrot-card-demo/services/cardService';
 import { Card } from '@/games/carrot-card-demo/components/Card';
 import { MainMenu } from '@/games/carrot-card-demo/components/MainMenu';
-import '../styles/game.css';
 
 export function GameContainer() {
   const [currentCard, setCurrentCard] = useState<CardType | null>(null);
