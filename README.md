@@ -4,6 +4,10 @@
 ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
+A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
+
+> **Note**: For detailed technical documentation, please refer to our **[Full Documentation](./docs/README.md)**.
+
 > **[➡️ Try the Live Demo!](https://tobenot.top/Basic-Web-Game/)**
 
 ![Demo Screenshot](./docs/assets/screenshot.webp)
@@ -11,10 +15,6 @@
 Play Beyond Books on Itch.io based on this project!
 
 [![Play Beyond Books on Itch.io](./docs/assets/bb_screenshot.webp)](https://tobenot.itch.io/beyond-books)
-
-A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
-
-> **Note**: For detailed technical documentation, please refer to our **[Full Documentation](./docs/README.md)**.
 
 ---
 
