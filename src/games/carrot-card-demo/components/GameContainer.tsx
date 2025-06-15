@@ -44,28 +44,25 @@ export function GameContainer() {
   const handleGameStart = () => {
     setIsGameStarted(true);
   };
-  
-  if (!isGameStarted) {
-    return <MainMenu onStart={handleGameStart} />;
-  }
 
-  if (isLoading) {
-    return <div className="fixed inset-0 bg-neutral-dark/80 flex justify-center items-center text-white z-50">正在加载...</div>;
-  }
-
-  if (error) {
-    return <div className="fixed inset-0 bg-neutral-dark/80 flex flex-col justify-center items-center text-white z-50">{error}</div>;
-  }
-
-  if (currentCard) {
-    return (
-      <Card
-        key={currentCard.id}
-        card={currentCard}
-        onChoice={handleChoice}
-      />
-    );
-  }
-
-  return <div className="fixed inset-0 bg-neutral-dark/80 flex flex-col justify-center items-center text-white z-50">游戏结束</div>;
+  // The main layout for the game is now defined here.
+  return (
+    <div className="w-full h-full grid grid-cols-[20fr_60fr_20fr] bg-[#1a1a2e]">
+      {!isGameStarted ? (
+        <MainMenu onStart={handleGameStart} />
+      ) : isLoading ? (
+        <div className="fixed inset-0 bg-neutral-dark/80 flex justify-center items-center text-white z-50">正在加载...</div>
+      ) : error ? (
+        <div className="fixed inset-0 bg-neutral-dark/80 flex flex-col justify-center items-center text-white z-50">{error}</div>
+      ) : currentCard ? (
+        <Card
+          key={currentCard.id}
+          card={currentCard}
+          onChoice={handleChoice}
+        />
+      ) : (
+        <div className="fixed inset-0 bg-neutral-dark/80 flex flex-col justify-center items-center text-white z-50">游戏结束</div>
+      )}
+    </div>
+  );
 } 
