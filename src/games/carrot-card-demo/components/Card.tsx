@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card as CardType } from '@/games/carrot-card-demo/types';
-import { illustrationService } from '@/games/carrot-card-demo/services/illustrationService';
 import { TypewriterText } from '@/carrot/components/TypewriterText';
+import { ImageLoader } from '@/carrot/components/ImageLoader';
 
 interface CardProps {
   card: CardType;
@@ -9,23 +9,16 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ card, onChoice }) => {
-  const [illustrationUrl, setIllustrationUrl] = React.useState('');
-
-  React.useEffect(() => {
-    const fetchIllustration = async () => {
-      const url = await illustrationService.getCardIllustration(card);
-      setIllustrationUrl(url);
-    };
-    fetchIllustration();
-  }, [card]);
-
   return (
     <div className="card-container">
-      {illustrationUrl && (
-        <div className="card-illustration">
-          <img src={illustrationUrl} alt={card.name} />
-        </div>
-      )}
+      <div className="card-illustration">
+        <ImageLoader
+          src={`/illustrations/${card.illustration || card.id}.webp`}
+          fallbackSrc={`/illustrations/default.webp`}
+          alt={card.name}
+          imageClass="h-full w-full object-cover"
+        />
+      </div>
       <div className="card-content">
         <h2 className="card-name">{card.name}</h2>
         <div className="card-description">
