@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 interface ImageLoaderProps {
 	/**
-	 * 图片的源路径。
+	 * 图片的源文件名（不含扩展名）。
 	 */
 	src: string;
 	/**
@@ -22,9 +22,19 @@ interface ImageLoaderProps {
 	 */
 	errorClass?: string;
 	/**
-	 * 图片加载失败时的回退路径。
+	 * 图片加载失败时的回退文件名（不含扩展名）。
 	 */
 	fallbackSrc?: string;
+	/**
+	 * 图片资源的基础路径。
+	 * @default ''
+	 */
+	basePath?: string;
+	/**
+	 * 图片文件的扩展名。
+	 * @default 'webp'
+	 */
+	extension?: string;
 }
 
 const BASE_URL = import.meta.env.BASE_URL;
@@ -60,16 +70,24 @@ export const ImageLoader: React.FC<ImageLoaderProps> = ({
 	placeholderClass,
 	errorClass,
 	fallbackSrc,
+	basePath = '',
+	extension = 'webp',
 }) => {
+	const getFullPath = (imgSrc?: string) => {
+		if (!imgSrc) return undefined;
+		const path = `${basePath}${imgSrc}.${extension}`;
+		return resolveAssetPath(path);
+	};
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasError, setHasError] = useState(false);
-	const [currentSrc, setCurrentSrc] = useState(resolveAssetPath(src));
+	const [currentSrc, setCurrentSrc] = useState(getFullPath(src));
 
 	useEffect(() => {
 		setIsLoading(true);
 		setHasError(false);
-		setCurrentSrc(resolveAssetPath(src));
-	}, [src]);
+		setCurrentSrc(getFullPath(src));
+	}, [src, basePath, extension]);
 
 	const handleLoad = () => {
 		setIsLoading(false);
@@ -77,9 +95,9 @@ export const ImageLoader: React.FC<ImageLoaderProps> = ({
 	};
 
 	const handleError = () => {
-		const resolvedFallback = resolveAssetPath(fallbackSrc);
-		if (resolvedFallback && currentSrc !== resolvedFallback) {
-			setCurrentSrc(resolvedFallback);
+		const fullFallbackSrc = getFullPath(fallbackSrc);
+		if (fullFallbackSrc && currentSrc !== fullFallbackSrc) {
+			setCurrentSrc(fullFallbackSrc);
 		} else {
 			setIsLoading(false);
 			setHasError(true);
@@ -138,7 +156,7 @@ export const ImageLoader: React.FC<ImageLoaderProps> = ({
 				</div>
 			)}
 			<img
-				src={currentSrc}
+				src={currentSrc || ''}
 				alt={alt}
 				onLoad={handleLoad}
 				onError={handleError}

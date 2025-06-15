@@ -13,8 +13,9 @@ export const Card: React.FC<CardProps> = ({ card, onChoice }) => {
     <div className="card-container">
       <div className="card-illustration">
         <ImageLoader
-          src={`/illustrations/${card.illustration || card.id}.webp`}
-          fallbackSrc={`/illustrations/default.webp`}
+          src={card.illustration || card.id}
+          fallbackSrc="default"
+          basePath="/illustrations/"
           alt={card.name}
           imageClass="h-full w-full object-cover"
         />
