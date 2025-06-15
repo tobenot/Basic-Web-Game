@@ -1,5 +1,5 @@
 import { resourceLoader } from '@/carrot/services/ResourceLoader';
-import { Card } from '@/games/demo-game/types';
+import { Card } from '@/games/carrot-card-demo/types';
 
 class CardService {
   private cards: Card[] = [];

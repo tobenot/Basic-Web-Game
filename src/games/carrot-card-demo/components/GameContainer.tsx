@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Card as CardType } from '@/games/demo-game/types';
-import { cardService } from '@/games/demo-game/services/cardService';
-import { Card } from '@/games/demo-game/components/Card';
-import { MainMenu } from '@/games/demo-game/components/MainMenu';
+import { Card as CardType } from '@/games/carrot-card-demo/types';
+import { cardService } from '@/games/carrot-card-demo/services/cardService';
+import { Card } from '@/games/carrot-card-demo/components/Card';
+import { MainMenu } from '@/games/carrot-card-demo/components/MainMenu';
 
 export function GameContainer() {
   const [currentCard, setCurrentCard] = useState<CardType | null>(null);

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card as CardType } from '@/games/demo-game/types';
-import { illustrationService } from '@/games/demo-game/services/illustrationService';
+import { Card as CardType } from '@/games/carrot-card-demo/types';
+import { illustrationService } from '@/games/carrot-card-demo/services/illustrationService';
 import { TypewriterText } from '@/carrot/components/TypewriterText';
 
 interface CardProps {

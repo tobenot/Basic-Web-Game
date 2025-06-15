@@ -1,4 +1,5 @@
-import { Card } from '@/games/demo-game/types';
+import { Card } from '@/games/carrot-card-demo/types';
+import { resourceLoader } from '@/carrot/services/ResourceLoader';
 
 class IllustrationService {
   private readonly BASE_PATH = `${import.meta.env.BASE_URL}illustrations/`;

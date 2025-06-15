@@ -1,5 +1,5 @@
 import './App.css';
-import { GameContainer } from '@/games/demo-game/components/GameContainer';
+import { GameContainer } from '@/games/carrot-card-demo/components/GameContainer';
 
 function App() {
   return (
