@@ -8,6 +8,8 @@
 
 ![Demo Screenshot](./docs/assets/screenshot.webp)
 
+Play Beyond Books on Itch.io based on this project!
+
 [![Play Beyond Books on Itch.io](./docs/assets/bb_screenshot.webp)](https://tobenot.itch.io/beyond-books)
 
 A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
