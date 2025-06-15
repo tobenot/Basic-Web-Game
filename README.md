@@ -4,6 +4,8 @@
 ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
+> **[➡️ Try the Live Demo!](https://tobenot.top/Basic-Web-Game/)**
+
 A simple, modular, and extensible web game template based on React, TypeScript, and Vite. Designed for rapid prototyping and building games for platforms like **itch.io** and **GitHub Pages**.
 
 > **Note**: For detailed technical documentation, please refer to our **[Full Documentation](./docs/README.md)**.
