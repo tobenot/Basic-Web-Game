@@ -1,23 +1,80 @@
-# 构建与部署
+# 5. 构建与部署
 
-本模板提供了一套完善的脚本，用于开发、构建和本地测试。
+本章将指导您如何为不同平台构建和部署您的游戏。
 
-### 开发服务器
+## 构建命令概览
 
-在开发过程中，您应该使用 Vite 的热更新服务器。它提供了最佳的开发体验。
+所有构建相关的命令都定义在 `package.json` 的 `scripts` 部分。
+
+-   **`npm run dev`**: 启动开发服务器，用于日常开发。
+-   **`npm run build`**: 创建一个标准的生产版本，输出到 `dist/` 目录。
+-   **`npm run build:itch`**: 为 **itch.io** 平台构建、打包，并自动管理版本号。
+-   **`npm run build:pages`**: 为 **GitHub Pages** 构建一个生产版本。
+-   **`npm run deploy`**: 构建并部署到 **GitHub Pages**。
+
+---
+
+## 为 itch.io 构建
+
+我们提供了一个功能强大的脚本来简化为 itch.io 的发布流程。
+
+执行以下命令：
 
 ```bash
-npm run dev
+npm run build:itch
 ```
 
-### 生产构建
+该命令会自动执行以下操作：
 
-`package.json` 中定义了多种构建命令：
+1.  **自动更新版本号**：读取 `public/version.json`，将版本号递增，然后写回文件。
+2.  **清理旧文件**：删除上一次的 `dist/` 构建目录。
+3.  **执行 Vite 构建**：以适配 itch.io 的相对路径模式 (`--base=./`) 进行构建。
+4.  **创建 ZIP 包**：将 `dist/` 目录中的所有内容打包成一个 `.zip` 文件，文件名将包含项目名和版本号（例如 `my-game-v1.0.1.zip`）。
 
-*   `npm run build`: 执行标准的生产构建，输出到 `dist` 目录。
-*   `npm run build:itch`: 专门为 [itch.io](https://itch.io/) 等平台优化的构建。它会在标准构建后，执行 `scripts/post-build.js` 脚本，将资源路径从绝对路径 (`/assets/`) 修改为相对路径 (`./assets/`)，以确保游戏在非根目录下也能正常运行。
-*   `npm run build:pages`: 专门为 GitHub Pages 部署的构建。
-*   `npm run deploy`: 使用 `gh-pages` 包将 `dist` 目录的内容部署到 GitHub Pages。
+构建完成后，您只需将生成的 `.zip` 文件上传到 itch.io 即可。
+
+---
+
+## 为 GitHub Pages 部署
+
+### 重要：配置仓库名称
+
+在部署到 GitHub Pages 之前，您必须确保 `package.json` 中的 `name` 字段与您的 GitHub 仓库名称完全一致。
+
+`vite.config.ts` 会使用这个字段来配置正确的资源基础路径（例如 `/your-repo-name/`）。如果此名称不匹配，部署后的游戏将无法正确加载资源。
+
+```json
+// package.json
+{
+  "name": "your-repo-name",
+  "private": true,
+  // ...
+}
+```
+
+### 部署步骤
+
+配置好 `name` 字段后，只需运行：
+
+```bash
+npm run deploy
+```
+
+该命令会：
+1.  使用 `build:pages` 脚本构建项目。
+2.  使用 `gh-pages` 工具将 `dist` 目录的内容推送到您仓库的 `gh-pages` 分支。
+
+---
+
+## 本地测试生产版本
+
+如果您想在本地测试生产构建的效果，可以运行：
+
+```bash
+npm run preview
+```
+
+此命令会在本地启动一个静态文件服务器，预览 `dist` 目录的内容。
 
 ### 本地测试生产构建
 

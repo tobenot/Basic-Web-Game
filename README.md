@@ -13,8 +13,11 @@ A simple, modular, and extensible web game template based on React, TypeScript, 
 ## ✨ Features
 
 -   **Modular Architecture**: Core engine (`carrot`) is separated from game-specific logic (`games`).
+-   **React + TypeScript**: Modern, type-safe UI development with reusable core components like `ImageLoader` and `TypewriterText`.
 -   **Vite Powered**: Fast development server and optimized builds.
--   **React + TypeScript**: Modern, type-safe UI development.
+-   **Automated Deployments**:
+    -   Built-in, one-command script (`npm run build:itch`) to version, build, and package your game for **itch.io**.
+    -   Streamlined deployment to **GitHub Pages** via `npm run deploy`.
 -   **Ready for Deployment**: Built-in scripts for easy deployment to **itch.io** and **GitHub Pages**.
 -   **Easy to Customize**: Designed to be a clean starting point for your next web-based game.
 
@@ -46,8 +49,8 @@ npm run build
 ```
 This will generate a `dist` directory with all your game files.
 
--   **For itch.io**: Use `npm run build:itch`. This command automatically adjusts asset paths, making your game ready to upload.
--   **For GitHub Pages**: Use `npm run deploy`. This will build your project and deploy it to GitHub Pages.
+-   **For itch.io**: Use `npm run build:itch`. This command automatically versions, builds, and packages your game into a `.zip` file, ready for upload.
+-   **For GitHub Pages**: Before deploying, ensure the `name` field in `package.json` matches your GitHub repository name. Then, use `npm run deploy`.
 
 > For more details on build commands and local testing, see the [Build and Deployment section in our documentation](./docs/05-build-and-deploy.md).
 
@@ -58,12 +61,13 @@ This will generate a `dist` directory with all your game files.
 ├── dist/               # Production build output
 ├── docs/               # Detailed project documentation
 ├── public/             # Static assets (images, fonts, config files)
+│   └── version.json    # Auto-versioning for itch.io builds
 ├── src/                # Source code
 │   ├── carrot/         # The core engine/template
 │   ├── games/          # Houses all specific game projects
 │   └── ...
 ├── scripts/
-│   └── post-build.js   # Script to fix paths for itch.io deployment
+│   └── build-itch.js   # Script for versioning and packaging for itch.io
 ├── .github/            # GitHub-specific files (e.g., workflows)
 └── ...
 ```

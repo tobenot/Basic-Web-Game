@@ -6,6 +6,7 @@
 /
 ├── public/             # 存放静态资源，如图片、字体、配置文件等
 │   └── game-config.json # 示例游戏配置文件
+│   └── version.json    # 用于 itch.io 构建的版本文件
 ├── src/                # 项目源码
 │   ├── assets/         # 全局资源
 │   ├── carrot/         # 核心引擎/模板
@@ -21,6 +22,12 @@
 │   ├── styles/         # 全局样式
 │   ├── App.tsx         # 应用主组件，用于集成和显示游戏
 │   └── main.tsx        # 应用入口点
+├── scripts/
+│   └── build-itch.js   # 用于构建和打包 itch.io 版本的脚本
+├── .github/            # GitHub 相关配置 (例如 CI/CD workflows)
+├── .gitignore          # Git 忽略文件配置
+├── package.json        # 项目依赖与脚本配置
 ├── README.md           # 项目简介和快速上手指南
 └── docs/               # (本系列文档) 详细的项目文档
+└── vite.config.ts      # Vite 配置文件
 ``` 
