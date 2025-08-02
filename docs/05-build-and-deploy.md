@@ -6,11 +6,11 @@
 
 所有构建相关的命令都定义在 `package.json` 的 `scripts` 部分。
 
--   **`npm run dev`**: 启动开发服务器，用于日常开发。
--   **`npm run build`**: 创建一个标准的生产版本，输出到 `dist/` 目录。
--   **`npm run build:itch`**: 为 **itch.io** 平台构建、打包，并自动管理版本号。
--   **`npm run build:pages`**: 为 **GitHub Pages** 构建一个生产版本。
--   **`npm run deploy`**: 构建并部署到 **GitHub Pages**。
+-   **`yarn dev`**: 启动开发服务器，用于日常开发。
+-   **`yarn build`**: 创建一个标准的生产版本，输出到 `dist/` 目录。
+-   **`yarn build:itch`**: 为 **itch.io** 平台构建、打包，并自动管理版本号。
+-   **`yarn build:pages`**: 为 **GitHub Pages** 构建一个生产版本。
+-   **`yarn deploy`**: 构建并部署到 **GitHub Pages**。
 
 ---
 
@@ -21,7 +21,7 @@
 执行以下命令：
 
 ```bash
-npm run build:itch
+yarn build:itch
 ```
 
 该命令会自动执行以下操作：
@@ -57,7 +57,7 @@ npm run build:itch
 配置好 `name` 字段后，只需运行：
 
 ```bash
-npm run deploy
+yarn deploy
 ```
 
 该命令会：
@@ -71,7 +71,7 @@ npm run deploy
 如果您想在本地测试生产构建的效果，可以运行：
 
 ```bash
-npm run preview
+yarn preview
 ```
 
 此命令会在本地启动一个静态文件服务器，预览 `dist` 目录的内容。
@@ -109,4 +109,4 @@ npm run preview
 2.  将您的代码推送到 `main` 分支。
 3.  稍等片刻，GitHub Actions 完成后，您的游戏就会在 GitHub Pages 网址上生效。
 
-这个自动化流程取代了原有的 `npm run deploy` 手动部署方式，让部署过程更可靠、更高效。 
+这个自动化流程取代了原有的 `yarn deploy` 手动部署方式，让部署过程更可靠、更高效。

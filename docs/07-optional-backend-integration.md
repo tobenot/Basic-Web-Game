@@ -29,7 +29,7 @@
 3.  **安装契约包**：
     安装后端发布的类型包：
     ```bash
-    npm install @tobenot/basic-web-game-backend-contract@latest
+    yarn add @tobenot/basic-web-game-backend-contract@latest
     ```
 
 4.  **在代码中使用类型**：
@@ -56,35 +56,29 @@
 
 #### **1.2 配置`.npmrc`**
 
-在您的前端项目根目录下（与`package.json`同级）创建一个名为 `.npmrc` 的文件。这个文件会告诉npm去哪里寻找 `@<您的GitHub用户名>` 作用域下的包。
+在您的前端项目根目录下（与`package.json`同级）创建一个名为 `.npmrc` 的文件。这个文件会告诉Yarn去哪里寻找 `@<您的GitHub用户名>` 作用域下的包，并提供认证。
 
 文件内容如下：
-```
+```ini
 @<您的GitHub用户名>:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=您的PAT令牌
 ```
+将 `您的PAT令牌` 替换为您在 **步骤 1.1** 中创建的 GitHub Personal Access Token (PAT)。
 
-#### **1.3 登录到GitHub Packages**
+> **重要提示**: 包含令牌的 `.npmrc` 文件非常敏感。请务必将其添加到 `.gitignore` 文件中，以防止被提交到版本控制中。
+> ```bash
+> echo ".npmrc" >> .gitignore
+> ```
 
-打开您的终端，运行以下命令以登录到 GitHub Packages。这将把您的凭证保存在本地，以便将来 `npm install` 时使用。
+#### **1.3 安装契约包**
 
+一切准备就绪后，使用 `yarn` 安装后端的类型契约包：
 ```bash
-npm login --scope=@<您的GitHub用户名> --registry=https://npm.pkg.github.com
-```
-
-当提示时，请输入：
-*   **Username**: 您的GitHub用户名。
-*   **Password**: 您刚刚创建的 **Personal Access Token (PAT)** (注意，不是您的GitHub密码)。
-*   **Email**: 您的GitHub账户关联的邮箱。
-
-#### **1.4 安装契约包**
-
-一切准备就绪后，像安装任何其他npm包一样安装后端的类型契约包：
-```bash
-npm install @<您的GitHub用户名>/basic-web-game-backend-contract@latest
+yarn add @<您的GitHub用户名>/basic-web-game-backend-contract@latest
 ```
 `@latest` 标签可以确保您总是获取最新版本的类型定义。
 
-#### **1.5 在代码中使用类型**
+#### **1.4 在代码中使用类型**
 
 现在，您可以在项目的任何地方导入和使用后端定义的类型，享受完整的IDE自动补全和类型检查。
 
@@ -144,7 +138,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
 ```
 
 #### **2.3 创建GitHub Actions工作流**
-后端仓库中会有一个GitHub Actions工作流 (`.github/workflows/publish-contract.yml`)，用于在代码推送到 `main` 分支时自动构建和发布npm包。
+后端仓库中会有一个GitHub Actions工作流 (`.github/workflows/publish-contract.yml`)，用于在代码推送到 `main` 分支时自动构建和发布包。
 
 ```yaml
 # Backend's .github/workflows/publish-contract.yml
@@ -167,10 +161,10 @@ jobs:
           node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@<您的GitHub用户名>'
-      - run: npm ci && npm run build
+      - run: yarn install --frozen-lockfile && yarn build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm publish
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
