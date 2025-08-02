@@ -12,6 +12,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  packages: read  # <-- 添加此行以允许读取 GitHub Packages
 
 # 只允许一个并发部署，新的部署会取消正在进行的部署
 concurrency:
@@ -30,9 +31,12 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
+          registry-url: 'https://npm.pkg.github.com' # <-- 指向 GitHub Packages 注册表
       
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # <-- 使用 GITHUB_TOKEN 进行认证
       
       - name: Build for GitHub Pages
         run: yarn build:pages

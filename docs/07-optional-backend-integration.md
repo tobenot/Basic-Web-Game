@@ -48,13 +48,13 @@
 
 ### **1. 前端仓库配置**
 
-#### **1.1 创建个人访问令牌（PAT）**
+#### **1.1 创建个人访问令牌（PAT）- 用于本地开发**
 
 1.  前往您的 GitHub **Settings** -> **Developer settings** -> **Personal access tokens**。
 2.  生成一个新令牌（classic token），并至少勾选 **`read:packages`** 权限。
 3.  **立即保存好您的令牌**，因为关闭页面后您将无法再次查看它。
 
-#### **1.2 配置`.npmrc`**
+#### **1.2 配置`.npmrc` - 用于本地开发**
 
 在您的前端项目根目录下（与`package.json`同级）创建一个名为 `.npmrc` 的文件。这个文件会告诉Yarn去哪里寻找 `@<您的GitHub用户名>` 作用域下的包，并提供认证。
 
@@ -70,44 +70,69 @@
 > echo ".npmrc" >> .gitignore
 > ```
 
-#### **1.3 安装契约包**
+#### **1.3 安装与使用**
 
 一切准备就绪后，使用 `yarn` 安装后端的类型契约包：
 ```bash
 yarn add @<您的GitHub用户名>/basic-web-game-backend-contract@latest
 ```
-`@latest` 标签可以确保您总是获取最新版本的类型定义。
-
-#### **1.4 在代码中使用类型**
-
-现在，您可以在项目的任何地方导入和使用后端定义的类型，享受完整的IDE自动补全和类型检查。
-
-```typescript
-// src/services/api.ts
-import type { AppRouter } from '@<您的GitHub用户名>/basic-web-game-backend-contract';
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-
-// 这是一个使用tRPC的示例，但类型可以用于任何HTTP客户端
-export const trpc = createTRPCProxyClient<AppRouter>({
-	links: [
-		httpBatchLink({
-			url: 'http://localhost:3000', // 您的后端地址
-		}),
-	],
-});
-
-// 现在您可以安全地调用后端过程
-// const user = await trpc.user.get.query({ id: '1' });
-// `user` 将拥有完整的类型信息
-```
+现在，您可以在项目的任何地方导入和使用后端定义的类型。
 
 ---
 
-### **2. 后端仓库配置（供参考）**
+### **2. CI/CD 环境配置 (例如 GitHub Actions)**
+
+您的本地 `.npmrc` 文件被 `.gitignore` 忽略，不会提交到仓库，因此在 CI/CD 环境（如 GitHub Actions）中，您需要另一种方式来认证。
+
+我们通过修改 GitHub Actions 工作流文件 `.github/workflows/deploy-pages.yml` 来实现：
+
+```yaml
+# .github/workflows/deploy-pages.yml
+
+# ... (其他配置)
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  packages: read  # 1. 授予读取包的权限
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          registry-url: 'https://npm.pkg.github.com' # 2. 指向 GitHub Packages
+      
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 3. 使用 GITHUB_TOKEN 进行认证
+      
+      # ... (后续步骤)
+```
+**关键改动解释**：
+
+1.  **`permissions: packages: read`**: 这行授予了工作流内置的 `GITHUB_TOKEN` 读取您的 GitHub Packages 的权限。
+2.  **`registry-url: 'https://npm.pkg.github.com'`**: 在 `setup-node` 步骤中，这行告诉 Node.js 和 Yarn，默认的包注册中心是 GitHub Packages。
+3.  **`env: NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}`**: 在 `Install dependencies` 步骤中，这行将 `GITHUB_TOKEN` 作为环境变量 `NODE_AUTH_TOKEN` 注入。Yarn/npm 会自动使用这个令牌来向 GitHub Packages 进行身份验证。
+
+通过以上配置，您的自动化工作流现在也能够成功拉取私有包了。
+
+---
+
+### **3. 后端仓库配置（供参考）**
 
 > **注意**：以下是后端仓库 (`Basic-Web-Game-Backend`) 需要进行的配置，以便能够成功发布类型包。作为前端开发人员，您通常不需要执行这些步骤，但了解它们有助于排查问题。
 
-#### **2.1 修改`package.json`**
+#### **3.1 修改`package.json`**
 后端的 `package.json` 需要被配置成一个作用域包，并指向生成的类型文件。
 ```json
 // Backend's package.json
@@ -125,7 +150,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
 }
 ```
 
-#### **2.2 调整`tsconfig.json`**
+#### **3.2 调整`tsconfig.json`**
 后端的 `tsconfig.json` 必须启用 `declaration` 选项来生成 `.d.ts` 类型声明文件。
 ```json
 // Backend's tsconfig.json
@@ -137,7 +162,7 @@ export const trpc = createTRPCProxyClient<AppRouter>({
 }
 ```
 
-#### **2.3 创建GitHub Actions工作流**
+#### **3.3 创建GitHub Actions工作流**
 后端仓库中会有一个GitHub Actions工作流 (`.github/workflows/publish-contract.yml`)，用于在代码推送到 `main` 分支时自动构建和发布包。
 
 ```yaml
