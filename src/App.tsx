@@ -1,8 +1,8 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Portal } from './games/portal/Portal';
 import { GameContainer } from './games/carrot-card-demo/components/GameContainer';
+import { DemoWithBackend } from './games/demo-with-backend';
 import { GameShell } from './carrot/components/GameShell';
-import './App.css';
 
 function App() {
 	return (
@@ -16,6 +16,10 @@ function App() {
 							<GameContainer />
 						</GameShell>
 					} 
+				/>
+				<Route 
+					path="/demo-with-backend" 
+					element={<DemoWithBackend />} 
 				/>
 			</Routes>
 		</HashRouter>

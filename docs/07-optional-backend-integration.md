@@ -4,6 +4,14 @@
 
 我们提供了一个模板后端项目 [tobenot/Basic-Web-Game-Backend](https://github.com/tobenot/Basic-Web-Game-Backend)，您可以直接使用它，或基于此模板创建自己的后端项目。该后端通过 **GitHub Packages** 发布一个私有的npm包来共享API类型契约。
 
+**🎮 新增：后端功能演示模块**
+
+本模板现在包含一个完整的后端集成演示模块 (`src/games/demo-with-backend`)，展示了如何实现：
+- 魔法链接登录
+- tRPC类型安全API调用
+- JWT令牌管理
+- 用户状态管理
+
 您估计会想使用自己的后端项目，请将下文中的所有 `@<您的GitHub用户名>` 替换为您的实际GitHub用户名。
 
 ---
@@ -11,6 +19,25 @@
 ## **快速使用指南（前端视角）**
 
 如果您已经熟悉流程，可以直接按照以下步骤操作：
+
+### **🎮 体验后端演示（推荐）**
+
+1. **启动后端服务**：
+   ```bash
+   # 在 Basic-Web-Game-Backend 项目中
+   npm run dev
+   ```
+
+2. **访问演示**：
+   启动前端开发服务器后，访问 `/demo-with-backend` 路由
+
+3. **体验功能**：
+   - 输入邮箱地址
+   - 检查邮箱或控制台获取魔法链接
+   - 点击链接完成登录
+   - 查看用户仪表板
+
+### **🔧 手动集成后端**
 
 1.  **创建 `.npmrc` 文件**：
     在项目根目录添加 `.npmrc` 文件，并包含以下内容：
@@ -193,6 +220,59 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+---
+
+## **🎮 后端演示模块详解**
+
+### **模块结构**
+
+```
+src/games/demo-with-backend/
+├── components/
+│   ├── LoginScreen.tsx    # 登录界面组件
+│   └── Dashboard.tsx      # 用户仪表板组件
+├── hooks/
+│   └── useAuth.ts         # 认证状态管理Hook
+├── services/
+│   └── trpc.ts           # tRPC客户端配置
+├── index.tsx             # 模块入口
+└── README.md             # 模块说明文档
+```
+
+### **核心功能**
+
+1. **魔法链接登录**：
+   - 用户输入邮箱地址
+   - 后端发送包含魔法链接的邮件
+   - 用户点击链接完成登录
+
+2. **JWT令牌管理**：
+   - 自动解析和验证JWT令牌
+   - 令牌过期自动清理
+   - 登录状态持久化
+
+3. **tRPC集成**：
+   - 类型安全的API调用
+   - 自动错误处理
+   - 完整的TypeScript支持
+
+### **如何移除**
+
+如果不需要后端功能，可以轻松移除：
+
+1. **删除模块**：
+   ```bash
+   rm -rf src/games/demo-with-backend
+   ```
+
+2. **移除路由**：
+   在 `src/App.tsx` 中删除相关导入和路由
+
+3. **清理依赖**（可选）：
+   ```bash
+   npm uninstall @trpc/client
+   ```
 
 ---
 

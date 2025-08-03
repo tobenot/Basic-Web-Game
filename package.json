@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@tobenot/basic-web-game-backend-contract": "^1.0.0",
+        "@trpc/client": "^11.4.3",
         "@types/react-router-dom": "^5.3.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
