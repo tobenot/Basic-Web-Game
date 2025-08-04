@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { trpc } from '../services/trpc';
 
 export const BackendStatus: React.FC = () => {
 	const [status, setStatus] = useState<'checking' | 'connected' | 'error'>('checking');
@@ -8,14 +7,26 @@ export const BackendStatus: React.FC = () => {
 	useEffect(() => {
 		const checkBackend = async () => {
 			try {
-				// 使用 tRPC 的 healthCheck 方法来检查后端连接
-				const result = await trpc.auth.healthCheck.query();
-				
-				if (result.status === 'ok') {
-					setStatus('connected');
+				// 使用环境变量中的后端URL，如果没有则回退到localhost
+				const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+				const response = await fetch(`${backendUrl}/api/trpc/auth.healthCheck`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					if (data.result?.data?.status === 'ok') {
+						setStatus('connected');
+					} else {
+						setStatus('error');
+						setError('后端服务异常');
+					}
 				} else {
 					setStatus('error');
-					setError('后端服务异常: ' + (result.message || '未知错误'));
+					setError(`HTTP ${response.status}: ${response.statusText}`);
 				}
 			} catch (err) {
 				setStatus('error');
@@ -45,7 +56,7 @@ export const BackendStatus: React.FC = () => {
 					<p>请确保后端服务正在运行：</p>
 					<p>1. 启动 Basic-Web-Game-Backend 项目</p>
 					<p>2. 运行 npm run dev</p>
-					<p>3. 确保服务运行在 ${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}</p>
+					<p>3. 确保服务运行在 {import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}</p>
 				</div>
 			)}
 		</div>
