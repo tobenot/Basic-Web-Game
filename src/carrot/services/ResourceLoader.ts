@@ -2,8 +2,17 @@ class ResourceLoader {
   private readonly baseUrl: string;
 
   constructor() {
-    this.baseUrl = import.meta.env.BASE_URL;
+    // 优先使用环境变量中的BASE_URL，如果没有则使用import.meta.env.BASE_URL
+    this.baseUrl = import.meta.env.BASE_URL || import.meta.env.VITE_BASE_URL || '/';
     console.log(`ResourceLoader initialized with base URL: ${this.baseUrl}`);
+    console.log('Environment variables:', {
+      BASE_URL: import.meta.env.BASE_URL,
+      VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
+      VITE_BACKEND_URL: import.meta.env.VITE_BACKEND_URL,
+      VITE_PUBLIC_URL: import.meta.env.VITE_PUBLIC_URL,
+      MODE: import.meta.env.MODE,
+      DEV: import.meta.env.DEV
+    });
   }
 
   /**
@@ -29,6 +38,7 @@ class ResourceLoader {
    */
   public async loadJSON<T>(path: string): Promise<T> {
     const url = this.buildUrl(path);
+    console.log(`[ResourceLoader] Loading JSON from: ${url}`);
     try {
       const response = await fetch(url);
       if (!response.ok) {

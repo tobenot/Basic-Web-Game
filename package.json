@@ -8,6 +8,7 @@
         "build": "tsc && vite build",
         "build:itch": "node scripts/build-itch.js",
         "build:pages": "cross-env GITHUB_PAGES=true vite build",
+        "test:env": "node scripts/test-env.js",
         "deploy": "npm run build:pages && gh-pages -d dist",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",

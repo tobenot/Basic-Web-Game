@@ -42,8 +42,10 @@ jobs:
         run: yarn build:pages
         env:
           NODE_ENV: production
+          GITHUB_PAGES: true
           VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
           VITE_PUBLIC_URL: ${{ secrets.VITE_PUBLIC_URL }}
+          VITE_BASE_URL: /Basic-Web-Game/
       
       - name: Setup Pages
         # 使用官方 Action 配置 GitHub Pages

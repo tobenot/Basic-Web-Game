@@ -10,7 +10,10 @@ export default defineConfig(({ command, mode }) => {
   console.log('Build Config:', {
     mode,
     command,
-    VITE_INCLUDE_START_PACK: env.VITE_INCLUDE_START_PACK
+    VITE_INCLUDE_START_PACK: env.VITE_INCLUDE_START_PACK,
+    VITE_BACKEND_URL: env.VITE_BACKEND_URL,
+    VITE_PUBLIC_URL: env.VITE_PUBLIC_URL,
+    GITHUB_PAGES: process.env.GITHUB_PAGES
   })
 
   return {
@@ -30,7 +33,10 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     define: {
-      'import.meta.env.VITE_INCLUDE_START_PACK': JSON.stringify(env.VITE_INCLUDE_START_PACK)
+      'import.meta.env.VITE_INCLUDE_START_PACK': JSON.stringify(env.VITE_INCLUDE_START_PACK),
+      'import.meta.env.VITE_BACKEND_URL': JSON.stringify(env.VITE_BACKEND_URL),
+      'import.meta.env.VITE_PUBLIC_URL': JSON.stringify(env.VITE_PUBLIC_URL),
+      'import.meta.env.BASE_URL': JSON.stringify(process.env.GITHUB_PAGES ? `/${pkg.name}/` : './')
     }
   }
 })
