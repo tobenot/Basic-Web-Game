@@ -40,6 +40,10 @@ jobs:
       
       - name: Build for GitHub Pages
         run: yarn build:pages
+        env:
+          NODE_ENV: production
+          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+          VITE_PUBLIC_URL: ${{ secrets.VITE_PUBLIC_URL }}
       
       - name: Setup Pages
         # 使用官方 Action 配置 GitHub Pages

@@ -104,9 +104,48 @@ yarn preview
 *   它会执行 `build:pages` 脚本来构建项目。
 *   构建成功后，它会将 `dist` 目录下的内容自动部署到您的 GitHub Pages。
 
+**配置 GitHub Secrets:**
+
+在部署之前，您需要在 GitHub 仓库中配置以下 Secrets：
+
+1.  **进入仓库设置**: 在您的 GitHub 仓库页面，点击 `Settings` 标签。
+2.  **找到 Secrets**: 在左侧菜单中，点击 `Secrets and variables` -> `Actions`。
+3.  **添加 Secrets**: 点击 `New repository secret` 按钮，添加以下两个 Secrets：
+
+    **`VITE_BACKEND_URL`**
+    - **值**: 您的后端 API 生产环境地址
+    - **示例**: `https://api.your-domain.com`
+    - **说明**: 前端应用将使用此地址连接后端服务
+
+    **`VITE_PUBLIC_URL`**
+    - **值**: 您的 GitHub Pages 应用完整 URL
+    - **示例**: `https://your-username.github.io/your-repo-name`
+    - **说明**: 用于生成应用内的绝对路径链接
+
 **如何使用:**
 1.  确保您的仓库已经开启了 GitHub Pages 功能（在 `Settings` -> `Pages` 中，将 `Source` 设置为 `GitHub Actions`）。
-2.  将您的代码推送到 `main` 分支。
-3.  稍等片刻，GitHub Actions 完成后，您的游戏就会在 GitHub Pages 网址上生效。
+2.  配置上述 GitHub Secrets。
+3.  将您的代码推送到 `main` 分支。
+4.  稍等片刻，GitHub Actions 完成后，您的游戏就会在 GitHub Pages 网址上生效。
 
 这个自动化流程取代了原有的 `yarn deploy` 手动部署方式，让部署过程更可靠、更高效。
+
+**环境变量说明:**
+
+- **开发环境**: 前端默认连接到 `http://localhost:3000`
+- **生产环境**: 前端连接到您在 `VITE_BACKEND_URL` Secret 中配置的地址
+- **本地开发**: 如需自定义后端地址，可在项目根目录创建 `.env` 文件并设置 `VITE_BACKEND_URL`
+
+**失败回退机制:**
+
+如果环境变量未配置或配置错误，系统会按以下优先级回退：
+
+1. **`VITE_BACKEND_URL` 未设置时**:
+   - 开发环境: 回退到 `http://localhost:3000`
+   - 生产环境: 回退到当前页面域名 (`window.location.origin`)
+
+2. **`VITE_PUBLIC_URL` 未设置时**:
+   - 回退到当前页面域名 (`window.location.origin`)
+
+3. **GitHub Secrets 未配置时**:
+   - 构建会失败，需要正确配置 Secrets 才能部署
