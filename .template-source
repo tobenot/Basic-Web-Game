@@ -1,0 +1,3 @@
+TEMPLATE_REPO=https://your.host/your-template.git
+TEMPLATE_REF=main
+MANIFEST_FILE=sync.manifest

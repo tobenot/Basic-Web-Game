@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card as CardType } from '@/games/carrot-card-demo/types';
-import { TypewriterText } from '@/carrot/components/TypewriterText';
-import { ImageLoader } from '@/carrot/components/ImageLoader';
+import { TypewriterText } from '@ui/TypewriterText';
+import { ImageLoader } from '@ui/ImageLoader';
 
 interface CardProps {
   card: CardType;

@@ -2,7 +2,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Portal } from './games/portal/Portal';
 import { GameContainer } from './games/carrot-card-demo/components/GameContainer';
 import { DemoWithBackend } from './games/demo-with-backend';
-import { GameShell } from './carrot/components/GameShell';
+import { GameShell } from '@ui/GameShell';
 
 function App() {
 	return (

@@ -1,20 +1,12 @@
-# 项目文档
+# 文档导航
 
-欢迎来到 Carrot Web 游戏模板的官方文档。
+- 01-Introduction: 基本介绍
+- 02-Project-Structure: 新的 Apps/Packages 布局
+- 03-Core-Engine: 可复用层说明（迁移至 `packages/*`）
+- 05-Build-and-Deploy: 构建部署
+- 07-Optional-Backend-Integration: 可选后端演示
 
-在这里，您可以找到关于项目结构、核心概念、开发流程和贡献指南的详细信息。
-
-## 目录
-
-*   **1. [欢迎](./01-introduction.md)**
-*   **2. [项目结构](./02-project-structure.md)**
-*   **3. [核心引擎 (`carrot/`)](./03-core-engine.md)**
-*   **4. [创建与扩展](./04-creation-and-extension.md)**
-*   **5. [构建与部署](./05-build-and-deploy.md)**
-*   **6. [贡献指南](./06-contributing.md)**
-
----
-
-### 本地化
-
-我们鼓励社区贡献不同语言的文档。请在 `docs` 目录下创建以语言代码命名的文件夹（如 `zh-CN`），并将翻译后的文件放入其中。 
+同步模板（A+）
+- 使用 `sync.manifest` 白名单
+- 执行 `bash scripts/update-from-template.sh`
+- 覆盖范围仅限模板托管区，所有改动自动备份 

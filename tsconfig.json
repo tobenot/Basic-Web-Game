@@ -20,10 +20,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "baseUrl": "./src",
+    "baseUrl": "./apps/web/src",
     "paths": {
-      "@/carrot/*": ["carrot/*"],
-      "@/games/*": ["games/*"]
+      "@/carrot/*": ["../../packages/ui/src/*"],
+      "@/games/*": ["games/*"],
+      "@ui/*": ["../../packages/ui/src/*"],
+      "@services/*": ["../../packages/services/src/*"]
     },
 
     "types": [
@@ -31,6 +33,6 @@
       "@testing-library/jest-dom"
     ]
   },
-  "include": ["src"],
+  "include": ["apps/web/src", "packages/ui/src", "packages/services/src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

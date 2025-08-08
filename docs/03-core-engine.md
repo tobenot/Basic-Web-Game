@@ -1,82 +1,51 @@
-# 核心引擎 (`carrot/`)
+# 可复用层（packages/*）
 
-`src/carrot/` 目录包含了游戏的核心功能和可复用模块。
+原先的 `src/carrot/` 已迁移至 `packages/*`：
+- 组件位于 `packages/ui/`
+- 服务位于 `packages/services/`
 
-### 服务 (`services/`)
+### 服务（`packages/services`）
 
 #### `ResourceLoader.ts`
 
-这是一个通用的资源加载器，可以方便地加载游戏所需的各种资源。目前，它主要用于加载 JSON 文件，但可以轻松扩展以支持图片、音频等其他资源。
+一个通用资源加载器，用于加载 JSON（可扩展到图片/音频等）。
 
-**使用方法:**
+使用方法:
 ```typescript
-import { ResourceLoader } from '@/src/carrot/services/ResourceLoader';
+import { resourceLoader } from '@services/ResourceLoader';
 
-const config = await ResourceLoader.loadJson<YourConfigType>('/game-config.json');
+const config = await resourceLoader.loadJSON<YourConfigType>('config/game.json');
 ```
 
-### 组件 (`components/`)
+### 组件（`packages/ui`）
 
 #### `TypewriterText.tsx`
 
-一个实现了打字机效果的 React 组件。它会逐个字符地显示传入的文本，常用于对话、叙事等场景。
+实现打字机效果的 React 组件。
 
-**使用方法:**
+使用方法:
 ```tsx
-import TypewriterText from '@/src/carrot/components/TypewriterText';
+import { TypewriterText } from '@ui/TypewriterText';
 
 <TypewriterText text="这是将要逐字显示的文本。" />
 ```
 
-## 核心组件
-
-### `TypewriterText`
-
-一个模拟打字机效果的文本组件。
-
--   **位置**: `src/carrot/components/TypewriterText.tsx`
--   **用途**: 用于在对话、描述等场景中逐字显示文本，增加沉浸感。
--   **主要 Props**:
-    -   `text`: 要显示的完整字符串。
-    -   `speed`: 打字速度（毫秒/字符）。
-    -   `enabled`: 是否开启动画效果。
-
 ### `ImageLoader`
 
-一个能够处理加载、错误和回退状态的图片组件。
-
--   **位置**: `src/carrot/components/ImageLoader.tsx`
--   **用途**: 优雅地加载图片，在图片加载时显示占位符，在加载失败时显示错误状态或回退图片。
--   **主要 Props**:
-    -   `src`: 图片文件名（不含路径和扩展名）。
-    -   `alt`: 图片的替代文本。
-    -   `basePath`: 图片所在的基础路径 (例如 `/illustrations/`)。
-    -   `extension`: 图片的文件扩展名 (默认为 `webp`)。
-    -   `fallbackSrc`: 加载失败时使用的回退图片文件名。
-    -   `imageClass`, `placeholderClass`, `errorClass`: 用于自定义各状态下样式的 CSS 类。
+优雅加载图片，处理加载、错误和回退。
+- 位置: `packages/ui/src/ImageLoader.tsx`
+- 主要 Props: `src`, `alt`, `basePath`, `extension`, `fallbackSrc`, `imageClass` 等
 
 ### `GameShell`
 
-一个可选的游戏"外壳"组件，用于提供屏幕方向锁定和固定的宽高比。
-
--   **位置**: `src/carrot/components/GameShell.tsx`
--   **用途**: 当您的游戏需要特定的屏幕方向（横屏或竖屏）时，用此组件包裹您的游戏主容器。
--   **主要 Props**:
-    -   `orientation`: `'landscape'` (横屏) 或 `'portrait'` (竖屏)。
-    -   `children`: 您的游戏主组件。
+屏幕方向锁定与固定宽高比的外壳组件。
+- 位置: `packages/ui/src/GameShell.tsx`
+- Props: `orientation: 'landscape' | 'portrait'`, `children`
 
 ### `ScreenOrientationLock`
 
-一个由 `GameShell` 内部使用的组件，用于在屏幕方向不匹配时显示提示。
+被 `GameShell` 内部使用，通常无需直接引用。
 
--   **位置**: `src/carrot/components/ScreenOrientationLock.tsx`
--   **用途**: 通常您不需要直接使用此组件，`GameShell` 会自动处理它。
-
-## 核心服务
-
-### `ResourceLoader`
-
--   **位置**: `src/carrot/services/ResourceLoader.ts`
--   **用途**: 用于加载游戏数据，例如从 JSON 文件加载场景、角色或配置。
--   **主要方法**:
-    -   `loadJson(path)`: 从指定路径加载并解析 JSON 文件。 
+### `ResourceLoader` API
+- 位置: `packages/services/src/ResourceLoader.ts`
+- 方法: `loadJSON(path)` 从路径加载并解析 JSON 文件。 

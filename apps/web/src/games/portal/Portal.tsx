@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TypewriterText } from '@/carrot/components/TypewriterText';
-import { ImageLoader } from '@/carrot/components/ImageLoader';
+import { TypewriterText } from '@ui/TypewriterText';
+import { ImageLoader } from '@ui/ImageLoader';
 
 export const Portal: React.FC = () => {
 	return (

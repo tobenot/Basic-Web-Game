@@ -43,7 +43,7 @@
 
 1.  **导入 `GameShell`**:
     ```tsx
-    import { GameShell } from './carrot/components/GameShell';
+    import { GameShell } from '@ui/GameShell';
     ```
 
 2.  **包裹您的路由**:

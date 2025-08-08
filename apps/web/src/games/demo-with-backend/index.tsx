@@ -3,7 +3,7 @@ import { LoginScreen } from './components/LoginScreen';
 import { Dashboard } from './components/Dashboard';
 import { DebugInfo } from './components/DebugInfo';
 import { useAuth } from './hooks/useAuth';
-import { GameShell } from '../../carrot/components/GameShell';
+import { GameShell } from '@ui/GameShell';
 
 export const DemoWithBackend: React.FC = () => {
 	const { user, isLoading } = useAuth();
