@@ -1,38 +1,35 @@
-# 项目结构
+# 项目结构（Apps/Packages 布局）
 
-本项目采用模块化的方式组织代码，核心逻辑与具体游戏实现分离，便于维护和扩展。
+本项目采用物理分层：`apps/*` 放业务/示例应用，`packages/*` 放可复用代码，`configs/*` 放工具链配置，降低冲突并便于选择性更新。
 
 ```
 /
-├── public/             # 存放静态资源，如图片、字体、配置文件等
-│   └── game-config.json # 示例游戏配置文件
-│   └── version.json    # 用于 itch.io 构建的版本文件
-├── src/                # 项目源码
-│   ├── assets/         # 全局资源
-│   ├── carrot/         # 核心引擎/模板
-│   │   ├── components/
-│   │   │   ├── ImageLoader.tsx
-│   │   │   ├── TypewriterText.tsx
-│   │   │   ├── GameShell.tsx
-│   │   │   └── ScreenOrientationLock.tsx
-│   │   └── services/
-│   │       └── ResourceLoader.ts
-│   │   ├── types/      # 引擎的TypeScript类型定义
-│   │   └── ...
-│   ├── games/          # 存放所有具体游戏项目
-│   │   └── carrot-card-demo/  # 示例卡牌游戏
-│   │       ├── components/    # 游戏特有的React组件
-│   │       ├── services/      # 游戏特有的服务
-│   │       └── types/         # 游戏特有的TypeScript类型定义
-│   ├── styles/         # 全局样式
-│   ├── App.tsx         # 应用主组件，用于集成和显示游戏
-│   └── main.tsx        # 应用入口点
+├── apps/
+│   └── web/                 # 主 Web 应用（Vite root）
+│       ├── public/
+│       ├── src/
+│       │   ├── games/       # 示例：carrot-card-demo, demo-with-backend, portal
+│       │   └── ...
+│       └── index.html
+├── packages/
+│   ├── ui/                  # 通用 UI 组件（ImageLoader/TypewriterText/GameShell/...）
+│   └── services/            # 通用服务（ResourceLoader/...）
 ├── scripts/
-│   └── build-itch.js   # 用于构建和打包 itch.io 版本的脚本
-├── .github/            # GitHub 相关配置 (例如 CI/CD workflows)
-├── .gitignore          # Git 忽略文件配置
-├── package.json        # 项目依赖与脚本配置
-├── README.md           # 项目简介和快速上手指南
-└── docs/               # (本系列文档) 详细的项目文档
-└── vite.config.ts      # Vite 配置文件
-``` 
+│   ├── build-itch.js        # itch.io 构建打包
+│   └── update-from-template.sh # A+ 模板同步脚本（按白名单拷贝）
+├── sync.manifest            # 模板托管区白名单
+├── vite.config.ts           # 指向 apps/web 为 root，输出 dist 到仓库根
+├── tailwind.config.js       # Tailwind 扫描 apps 与 packages
+└── docs/
+```
+
+导入别名：
+- `@` -> `apps/web/src`
+- `@ui` -> `packages/ui/src`
+- `@services` -> `packages/services/src`
+
+TypeScript `paths` 已覆盖上述别名，并将 `packages/*` 源码纳入 `include`，开箱即用。
+
+A+ 同步策略（可选）：
+- 继续手动拷贝也可；
+- 或运行 `bash scripts/update-from-template.sh`，按 `sync.manifest` 覆盖模板托管区，冲突范围小、自动做备份。 

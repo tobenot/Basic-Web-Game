@@ -1,4 +1,4 @@
-import { resourceLoader } from '@/carrot/services/ResourceLoader';
+import { resourceLoader } from '@services/ResourceLoader';
 import { Card } from '@/games/carrot-card-demo/types';
 
 class CardService {

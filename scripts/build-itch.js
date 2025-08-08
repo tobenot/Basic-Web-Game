@@ -17,7 +17,7 @@ const packageJson = JSON.parse(
 );
 const projectName = packageJson.name || 'game';
 
-const VERSION_FILE = path.join(__dirname, '../public/version.json');
+const VERSION_FILE = path.join(__dirname, '../apps/web/public/version.json');
 
 async function updateVersion() {
 	let version = { version: '0.0.1' }; // 如果文件不存在，则从 0.0.1 开始
