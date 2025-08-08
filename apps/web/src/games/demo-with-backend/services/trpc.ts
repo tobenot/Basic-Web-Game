@@ -28,6 +28,15 @@ export const trpc = createTRPCProxyClient<AppRouter>({
 	links: [
 		httpBatchLink({
 			url: `${baseUrl}/api/trpc`,
+			headers() {
+				// Read token at call time to reflect latest auth state
+				try {
+					const token = typeof window !== 'undefined' ? localStorage.getItem('sessionToken') : null;
+					return token ? { Authorization: `Bearer ${token}` } : {};
+				} catch (e) {
+					return {};
+				}
+			},
 		}),
 	],
 }); 
