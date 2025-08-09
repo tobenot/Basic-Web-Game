@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../services/trpc';
+import { AiChatDemo } from './AiChatDemo';
 
 export const Dashboard: React.FC = () => {
 	const { user, logout } = useAuth();
 	const [announcements, setAnnouncements] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'ai'>('overview');
 	const [me, setMe] = useState<{ userId: string } | null>(null);
 	const [echoInput, setEchoInput] = useState('Hello Backend');
 	const [echoResult, setEchoResult] = useState<string>('');
@@ -82,7 +83,8 @@ export const Dashboard: React.FC = () => {
 						<nav className="-mb-px flex space-x-6" aria-label="Tabs">
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'overview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('overview')}>概览</button>
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'user' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('user')}>用户信息</button>
-							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'echo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('echo')}>Echo 示例</button>
+                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'echo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('echo')}>Echo 示例</button>
+                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 示例</button>
 						</nav>
 					</div>
 
@@ -136,6 +138,10 @@ export const Dashboard: React.FC = () => {
 							{echoResult && <p className="mt-3 text-sm text-gray-800">结果：{echoResult}</p>}
 						</div>
 					)}
+
+                {activeTab === 'ai' && (
+                    <AiChatDemo />
+                )}
 				</div>
 
 				<div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
