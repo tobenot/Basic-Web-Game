@@ -11,7 +11,7 @@ type DashboardProps = {
 export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 	const [announcements, setAnnouncements] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'ai' | 'aiBackend'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'cors' | 'ai' | 'aiBackend'>('overview');
 	const [me, setMe] = useState<{ userId: string } | null>(null);
 	const [echoInput, setEchoInput] = useState('Hello Backend');
 	const [echoResult, setEchoResult] = useState<string>('');
@@ -21,14 +21,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
 	useEffect(() => {
 		const fetchAnnouncements = async () => {
-		try {
-			const list = await (trpc as any).announcement.list.query();
-			if (Array.isArray(list) && list.length > 0) {
-				setAnnouncements(list.map((a: any) => a.message ?? a.announcement ?? String(a)));
-			} else if (list?.announcement) {
-				setAnnouncements([list.announcement]);
-			}
-			} catch (error) {
+        try {
+            const result = await trpc.announcement.getAnnouncement.query();
+            if (Array.isArray(result)) {
+                setAnnouncements(result.map((a: any) => a.message ?? a.announcement ?? String(a)));
+            } else if (result?.announcement) {
+                setAnnouncements([result.announcement]);
+            }
+            } catch (error) {
 				console.error('获取公告失败:', error);
 			} finally {
 				setIsLoading(false);
@@ -38,19 +38,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 		fetchAnnouncements();
 	}, []);
 
-	const fetchMe = async () => {
+    const fetchMe = async () => {
 		setMeLoading(true);
 		setMeError(null);
 		try {
-			const result = await (trpc as any).auth.me.query();
+            const result = await trpc.user.getMe.query();
 			if (!result) {
 				throw new Error('未登录或会话已失效');
 			}
-			const derivedUserId = (result as any).userId ?? (result as any).id;
-			if (!derivedUserId) {
-				throw new Error('后端未返回用户ID');
-			}
-			setMe({ userId: String(derivedUserId) });
+            setMe({ userId: String((result as any).userId) });
 		} catch (err) {
 			setMeError(err instanceof Error ? err.message : '请求失败');
 		} finally {
@@ -58,16 +54,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 		}
 	};
 
-	const doEcho = async () => {
+    const doEcho = async () => {
 		setEchoLoading(true);
 		setEchoResult('');
 		try {
-			const res = await (trpc as any).utils?.echo?.query?.({ text: echoInput });
-			if (res?.text) {
-				setEchoResult(res.text);
-			} else {
-				setEchoResult('后端未提供 echo 接口，已回退为本地显示: ' + echoInput);
-			}
+            const res = await trpc.echo.echo.mutate({ message: echoInput });
+            setEchoResult(res?.message ?? '');
 		} catch (e) {
 			setEchoResult('调用失败: ' + (e instanceof Error ? e.message : '未知错误'));
 		} finally {
@@ -97,6 +89,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'overview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('overview')}>概览</button>
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'user' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('user')}>用户信息</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'echo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('echo')}>Echo 示例</button>
+                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'cors' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('cors')}>CORS 调试</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 直连</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'aiBackend' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('aiBackend')}>AI 后端代理</button>
 						</nav>
@@ -153,6 +146,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 						</div>
 					)}
 
+                    {activeTab === 'cors' && (
+                        <CorsDebugPanel />
+                    )}
+
                 {activeTab === 'ai' && (
                     <AiChatDemo />
                 )}
@@ -187,3 +184,65 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 		</div>
 	);
 }; 
+
+const CorsDebugPanel: React.FC = () => {
+	const [configText, setConfigText] = useState('');
+	const [originText, setOriginText] = useState('');
+	const [healthText, setHealthText] = useState('');
+	const [loading, setLoading] = useState<'cfg' | 'origin' | 'health' | null>(null);
+
+	const getConfig = async () => {
+		setLoading('cfg');
+		try {
+			const res = await trpc.corsDebug.getConfig.query();
+			setConfigText(JSON.stringify(res, null, 2));
+		} finally {
+			setLoading(null);
+		}
+	};
+
+	const testOrigin = async () => {
+		setLoading('origin');
+		try {
+			const res = await trpc.corsDebug.testOrigin.query({ origin: window.location.origin });
+			setOriginText(JSON.stringify(res, null, 2));
+		} finally {
+			setLoading(null);
+		}
+	};
+
+	const health = async () => {
+		setLoading('health');
+		try {
+			const res = await trpc.corsDebug.health.query();
+			setHealthText(JSON.stringify(res, null, 2));
+		} finally {
+			setLoading(null);
+		}
+	};
+
+	return (
+		<div className="bg-white border rounded-lg p-4 sm:p-6 space-y-4">
+			<h2 className="text-base sm:text-lg font-semibold text-gray-900">CORS 调试</h2>
+			<div className="flex gap-2 flex-wrap">
+				<button onClick={getConfig} disabled={loading==="cfg"} className="bg-blue-600 text-white px-3 py-2 rounded disabled:opacity-50 text-sm">{loading==='cfg'?'获取中...':'获取配置'}</button>
+				<button onClick={testOrigin} disabled={loading==="origin"} className="bg-indigo-600 text-white px-3 py-2 rounded disabled:opacity-50 text-sm">{loading==='origin'?'测试中...':'测试当前 Origin'}</button>
+				<button onClick={health} disabled={loading==="health"} className="bg-green-600 text-white px-3 py-2 rounded disabled:opacity-50 text-sm">{loading==='health'?'检查中...':'健康检查'}</button>
+			</div>
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+				<div className="bg-gray-50 border rounded p-3">
+					<div className="text-xs text-gray-500 mb-1">配置</div>
+					<pre className="text-xs whitespace-pre-wrap">{configText}</pre>
+				</div>
+				<div className="bg-gray-50 border rounded p-3">
+					<div className="text-xs text-gray-500 mb-1">Origin 测试</div>
+					<pre className="text-xs whitespace-pre-wrap">{originText}</pre>
+				</div>
+				<div className="bg-gray-50 border rounded p-3">
+					<div className="text-xs text-gray-500 mb-1">健康</div>
+					<pre className="text-xs whitespace-pre-wrap">{healthText}</pre>
+				</div>
+			</div>
+		</div>
+	);
+};

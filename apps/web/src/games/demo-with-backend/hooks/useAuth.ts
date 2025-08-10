@@ -26,9 +26,9 @@ export const useAuth = () => {
 		setIsLoading(false);
 	}, []);
 
-	const login = async (email: string) => {
+    const login = async (email: string) => {
 		try {
-			await (trpc as any).auth.sendMagicLink.mutate({ email });
+			await (trpc as any).auth.requestLoginLink.mutate({ email });
 			return { success: true };
 		} catch (error) {
 			return { success: false, error: error instanceof Error ? error.message : '登录失败' };
@@ -37,7 +37,7 @@ export const useAuth = () => {
 
 	const verifyToken = async (token: string) => {
 		try {
-			const result = await (trpc as any).auth.verifyToken.query({ token });
+			const result = await (trpc as any).auth.verifyMagicToken.query({ token });
 			localStorage.setItem('sessionToken', result.sessionToken);
 			const payload = JSON.parse(atob(result.sessionToken.split('.')[1]));
 			setUser({ userId: payload.userId });

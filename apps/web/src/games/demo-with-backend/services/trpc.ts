@@ -1,4 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import type { AppRouter } from '@tobenot/basic-web-game-backend-contract';
 
 const getBaseUrl = () => {
 	console.log('Environment variables for tRPC:', {
@@ -23,12 +24,11 @@ const getBaseUrl = () => {
 const baseUrl = getBaseUrl();
 console.log('Final tRPC base URL:', baseUrl);
 
-export const trpc = createTRPCProxyClient<any>({
+export const trpc = createTRPCProxyClient<AppRouter>({
 	links: [
 		httpBatchLink({
 			url: `${baseUrl}/api/trpc`,
 			headers() {
-				// Read token at call time to reflect latest auth state
 				try {
 					const token = typeof window !== 'undefined' ? localStorage.getItem('sessionToken') : null;
 					return token ? { Authorization: `Bearer ${token}` } : {};

@@ -66,7 +66,7 @@ type BackendCallParams = {
 export async function callBackendAi({ model, messages, signal, onChunk }: BackendCallParams) {
 	const baseUrl = getBackendBaseUrl();
 	const token = typeof window !== 'undefined' ? localStorage.getItem('sessionToken') : null;
-	const response = await fetch(`${baseUrl}/api/ai/chat`, {
+	const response = await fetch(`${baseUrl}/api/v1/chat/completions`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
