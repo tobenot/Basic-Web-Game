@@ -12,9 +12,9 @@ class CardService {
     try {
       const packNames = await resourceLoader.loadJSON<string[]>('config/cardPacks.json');
       
-      const loadPromises = packNames.map(packName =>
+      const loadPromises = packNames.map((packName: string) =>
         resourceLoader.loadJSON<Card[]>(`config/cards/${packName}/base.json`)
-          .catch(error => {
+          .catch((error: unknown) => {
             console.error(`Failed to load card pack: ${packName}`, error);
             return []; // 如果某个包加载失败，返回空数组，不影响其他包
           })

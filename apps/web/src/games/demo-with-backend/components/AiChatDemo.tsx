@@ -32,7 +32,7 @@ export const AiChatDemo: React.FC = () => {
 				model,
 				messages: nextMessages,
 				signal: controller.signal,
-				onChunk: (m) => {
+                onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 					assistantDraft.content = m.content;
 					setMessages(prev => {
 						const copy = [...prev];

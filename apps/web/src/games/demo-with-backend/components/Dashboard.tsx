@@ -21,9 +21,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
 	useEffect(() => {
 		const fetchAnnouncements = async () => {
-			try {
-				const result = await trpc.announcement.getAnnouncement.query();
-				setAnnouncements([result.announcement]);
+		try {
+			const list = await (trpc as any).announcement.list.query();
+			if (Array.isArray(list) && list.length > 0) {
+				setAnnouncements(list.map((a: any) => a.message ?? a.announcement ?? String(a)));
+			} else if (list?.announcement) {
+				setAnnouncements([list.announcement]);
+			}
 			} catch (error) {
 				console.error('获取公告失败:', error);
 			} finally {
@@ -38,7 +42,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 		setMeLoading(true);
 		setMeError(null);
 		try {
-			const result = await trpc.user.getMe.query();
+			const result = await (trpc as any).auth.me.query();
 			if (!result) {
 				throw new Error('未登录或会话已失效');
 			}

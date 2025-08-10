@@ -1,5 +1,4 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '@tobenot/basic-web-game-backend-contract';
 
 const getBaseUrl = () => {
 	console.log('Environment variables for tRPC:', {
@@ -24,7 +23,7 @@ const getBaseUrl = () => {
 const baseUrl = getBaseUrl();
 console.log('Final tRPC base URL:', baseUrl);
 
-export const trpc = createTRPCProxyClient<AppRouter>({
+export const trpc = createTRPCProxyClient<any>({
 	links: [
 		httpBatchLink({
 			url: `${baseUrl}/api/trpc`,

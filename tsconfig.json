@@ -20,12 +20,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "baseUrl": "./apps/web/src",
+    "baseUrl": ".",
     "paths": {
-      "@/carrot/*": ["../../packages/ui/src/*"],
-      "@/games/*": ["games/*"],
-      "@ui/*": ["../../packages/ui/src/*"],
-      "@services/*": ["../../packages/services/src/*"]
+      "@/*": ["apps/web/src/*"],
+      "@/games/*": ["apps/web/src/games/*"],
+      "@ui/*": ["packages/ui/src/*"],
+      "@services/*": ["packages/services/src/*"]
     },
 
     "types": [
