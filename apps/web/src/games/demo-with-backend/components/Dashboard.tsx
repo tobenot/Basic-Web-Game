@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../services/trpc';
 import { AiChatDemo } from './AiChatDemo';
+import { AiChatBackendDemo } from './AiChatBackendDemo';
 
-export const Dashboard: React.FC = () => {
-	const { user, logout } = useAuth();
+type DashboardProps = {
+    user: { userId: string };
+    onLogout: () => void;
+};
+
+export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 	const [announcements, setAnnouncements] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'ai'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'ai' | 'aiBackend'>('overview');
 	const [me, setMe] = useState<{ userId: string } | null>(null);
 	const [echoInput, setEchoInput] = useState('Hello Backend');
 	const [echoResult, setEchoResult] = useState<string>('');
@@ -35,7 +39,14 @@ export const Dashboard: React.FC = () => {
 		setMeError(null);
 		try {
 			const result = await trpc.user.getMe.query();
-			setMe({ userId: result.userId });
+			if (!result) {
+				throw new Error('未登录或会话已失效');
+			}
+			const derivedUserId = (result as any).userId ?? (result as any).id;
+			if (!derivedUserId) {
+				throw new Error('后端未返回用户ID');
+			}
+			setMe({ userId: String(derivedUserId) });
 		} catch (err) {
 			setMeError(err instanceof Error ? err.message : '请求失败');
 		} finally {
@@ -47,8 +58,6 @@ export const Dashboard: React.FC = () => {
 		setEchoLoading(true);
 		setEchoResult('');
 		try {
-			// Use a generic echo if available in backend contract, otherwise fallback to announcement text
-			// @ts-expect-error: echo may not exist depending on backend version
 			const res = await (trpc as any).utils?.echo?.query?.({ text: echoInput });
 			if (res?.text) {
 				setEchoResult(res.text);
@@ -71,8 +80,8 @@ export const Dashboard: React.FC = () => {
 							<h1 className="text-xl sm:text-2xl font-bold text-gray-900">欢迎回来！</h1>
 							<p className="text-sm sm:text-base text-gray-600">用户ID: {user?.userId}</p>
 						</div>
-						<button
-							onClick={logout}
+                        <button
+                            onClick={onLogout}
 							className="bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm sm:text-base"
 						>
 							退出登录
@@ -84,7 +93,8 @@ export const Dashboard: React.FC = () => {
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'overview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('overview')}>概览</button>
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'user' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('user')}>用户信息</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'echo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('echo')}>Echo 示例</button>
-                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 示例</button>
+                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 直连</button>
+                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'aiBackend' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('aiBackend')}>AI 后端代理</button>
 						</nav>
 					</div>
 
@@ -141,6 +151,10 @@ export const Dashboard: React.FC = () => {
 
                 {activeTab === 'ai' && (
                     <AiChatDemo />
+                )}
+
+                {activeTab === 'aiBackend' && (
+                    <AiChatBackendDemo />
                 )}
 				</div>
 

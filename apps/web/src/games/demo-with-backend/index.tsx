@@ -6,7 +6,7 @@ import { useAuth } from './hooks/useAuth';
 import { GameShell } from '@ui/GameShell';
 
 export const DemoWithBackend: React.FC = () => {
-	const { user, isLoading, verifyToken } = useAuth();
+    const { user, isLoading, verifyToken, logout } = useAuth();
 	const [verifying, setVerifying] = React.useState(false);
 
 	// 添加环境变量调试信息
@@ -51,9 +51,9 @@ export const DemoWithBackend: React.FC = () => {
 		);
 	}
 
-	return (
+    return (
 		<GameShell orientation="landscape">
-			{user ? <Dashboard /> : <LoginScreen />}
+            {user ? <Dashboard user={user} onLogout={logout} /> : <LoginScreen />}
 			<DebugInfo />
 		</GameShell>
 	);
