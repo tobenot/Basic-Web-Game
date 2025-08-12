@@ -61,9 +61,10 @@ type BackendCallParams = {
 	messages: ChatMessage[];
 	signal?: AbortSignal;
 	onChunk?: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => void;
+    stream?: boolean;
 };
 
-export async function callBackendAi({ model, messages, signal, onChunk }: BackendCallParams) {
+export async function callBackendAi({ model, messages, signal, onChunk, stream = true }: BackendCallParams) {
 	const baseUrl = getBackendBaseUrl();
 	const token = typeof window !== 'undefined' ? localStorage.getItem('sessionToken') : null;
 	const response = await fetch(`${baseUrl}/api/v1/chat/completions`, {
@@ -73,12 +74,19 @@ export async function callBackendAi({ model, messages, signal, onChunk }: Backen
 			...(token ? { Authorization: `Bearer ${token}` } : {})
 		},
 		signal,
-		body: JSON.stringify({ model, messages, stream: true })
+        body: JSON.stringify({ model, messages, stream })
 	});
 	if (!response.ok) {
 		const errorText = await response.text();
 		throw new Error(`AI后端请求失败: ${response.status} - ${errorText}`);
 	}
+    if (!stream) {
+        const data = await response.json();
+        const content = data?.choices?.[0]?.message?.content ?? '';
+        const newMessage = { role: 'assistant' as const, content, reasoning_content: '', timestamp: new Date().toISOString() };
+        if (onChunk) onChunk(newMessage);
+        return newMessage;
+    }
 	const newMessage = { role: 'assistant' as const, content: '', reasoning_content: '', timestamp: new Date().toISOString() };
 	const reader = response.body?.getReader();
 	if (!reader) return newMessage;

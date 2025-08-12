@@ -945,6 +945,11 @@
   resolved "https://registry.yarnpkg.com/@trpc/client/-/client-11.4.3.tgz#0768180ede079f679408f316bbfbcb2bb88f8ba0"
   integrity sha512-i2suttUCfColktXT8bqex5kHW5jpT15nwUh0hGSDiW1keN621kSUQKcLJ095blqQAUgB+lsmgSqSMmB4L9shQQ==
 
+"@trpc/server@^11.4.3":
+  version "11.4.4"
+  resolved "https://registry.npmmirror.com/@trpc/server/-/server-11.4.4.tgz#847455e43ec236e163f0a34d95237d140618dfb7"
+  integrity sha512-VkJb2xnb4rCynuwlCvgPBh5aM+Dco6fBBIo6lWAdJJRYVwtyE5bxNZBgUvRRz/cFSEAy0vmzLxF7aABDJfK5Rg==
+
 "@types/archiver@^6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@types/archiver/-/archiver-6.0.3.tgz#074eb6f4febc0128c25a205a8263da3d4688df53"

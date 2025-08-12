@@ -7,6 +7,7 @@ export const AiChatBackendDemo: React.FC = () => {
 	const [input, setInput] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
 	const [error, setError] = React.useState('');
+	const [stream, setStream] = React.useState(true);
 	const abortRef = React.useRef<AbortController | null>(null);
 
 	const onSend = async () => {
@@ -21,11 +22,12 @@ export const AiChatBackendDemo: React.FC = () => {
 		const assistantDraft: ChatMessage = { role: 'assistant', content: '' };
 		setMessages(prev => [...prev, assistantDraft]);
 		try {
-			await callBackendAi({
+			const result = await callBackendAi({
 				model,
 				messages: nextMessages,
 				signal: controller.signal,
-                onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
+				stream,
+				onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 					assistantDraft.content = m.content;
 					setMessages(prev => {
 						const copy = [...prev];
@@ -34,6 +36,13 @@ export const AiChatBackendDemo: React.FC = () => {
 					});
 				}
 			});
+			if (!stream) {
+				setMessages(prev => {
+					const copy = [...prev];
+					copy[copy.length - 1] = { role: 'assistant', content: result.content };
+					return copy;
+				});
+			}
 		} catch (e) {
 			setError(e instanceof Error ? e.message : '调用失败');
 		} finally {
@@ -51,6 +60,10 @@ export const AiChatBackendDemo: React.FC = () => {
 			<h2 className="text-base sm:text-lg font-semibold text-gray-900">AI 后端代理演示</h2>
 			<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
 				<input className="px-3 py-2 border rounded col-span-1 sm:col-span-1" placeholder="Model" value={model} onChange={(e) => setModel(e.target.value)} />
+				<label className="flex items-center gap-2 text-sm col-span-1">
+					<input type="checkbox" checked={stream} onChange={(e) => setStream(e.target.checked)} />
+					<span>流式</span>
+				</label>
 			</div>
 			<div className="h-64 border rounded p-3 overflow-auto bg-gray-50">
 				{messages.map((m, i) => (
