@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { trpc } from '../services/trpc';
-import { AiChatDemo } from './AiChatDemo';
-import { AiChatBackendDemo } from './AiChatBackendDemo';
+import { AiChatUnified } from './AiChatUnified';
 
 type DashboardProps = {
     user: { userId: string };
@@ -11,7 +10,7 @@ type DashboardProps = {
 export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 	const [announcements, setAnnouncements] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'cors' | 'ai' | 'aiBackend'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'user' | 'echo' | 'cors' | 'ai'>('overview');
 	const [me, setMe] = useState<{ userId: string } | null>(null);
 	const [echoInput, setEchoInput] = useState('Hello Backend');
 	const [echoResult, setEchoResult] = useState<string>('');
@@ -90,8 +89,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'user' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('user')}>用户信息</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'echo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('echo')}>Echo 示例</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'cors' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('cors')}>CORS 调试</button>
-                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 直连</button>
-                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'aiBackend' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('aiBackend')}>AI 后端代理</button>
+                            							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 聊天</button>
 						</nav>
 					</div>
 
@@ -151,11 +149,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                     )}
 
                 {activeTab === 'ai' && (
-                    <AiChatDemo />
-                )}
-
-                {activeTab === 'aiBackend' && (
-                    <AiChatBackendDemo />
+                    <AiChatUnified />
                 )}
 				</div>
 

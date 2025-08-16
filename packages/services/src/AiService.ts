@@ -12,10 +12,11 @@ type CallParams = {
 	maxTokens?: number;
 	signal?: AbortSignal;
 	onChunk?: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => void;
+	stream?: boolean;
 };
 
-export async function callAiModel({ apiUrl, apiKey, model, messages, temperature = 0.7, maxTokens = 4096, signal, onChunk }: CallParams) {
-	const requestBody = { model, messages, stream: true, temperature, max_tokens: maxTokens };
+export async function callAiModel({ apiUrl, apiKey, model, messages, temperature = 0.7, maxTokens = 4096, signal, onChunk, stream = true }: CallParams) {
+	const requestBody = { model, messages, stream, temperature, max_tokens: maxTokens };
 	const response = await fetch(apiUrl, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
@@ -25,6 +26,13 @@ export async function callAiModel({ apiUrl, apiKey, model, messages, temperature
 	if (!response.ok) {
 		const errorText = await response.text();
 		throw new Error(`API请求失败: ${response.status} - ${errorText}`);
+	}
+	if (!stream) {
+		const data = await response.json();
+		const content = data?.choices?.[0]?.message?.content ?? '';
+		const newMessage = { role: 'assistant' as const, content, reasoning_content: '', timestamp: new Date().toISOString() };
+		if (onChunk) onChunk(newMessage);
+		return newMessage;
 	}
 	const newMessage = { role: 'assistant' as const, content: '', reasoning_content: '', timestamp: new Date().toISOString() };
 	const reader = response.body?.getReader();
