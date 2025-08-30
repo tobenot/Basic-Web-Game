@@ -75,7 +75,7 @@ export const AiChatUnified: React.FC = () => {
 		setError('');
 		const controller = new AbortController();
 		abortRef.current = controller;
-		const assistantDraft: ChatMessage = { role: 'assistant', content: '' };
+		const assistantDraft: ChatMessage & { reasoning_content?: string } = { role: 'assistant', content: '' };
 		setMessages(prev => [...prev, assistantDraft]);
 
 		try {
@@ -87,9 +87,12 @@ export const AiChatUnified: React.FC = () => {
 					stream: canUseStream ? stream : false,
 					onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 						assistantDraft.content = m.content;
+						if (m.reasoning_content) {
+							assistantDraft.reasoning_content = m.reasoning_content;
+						}
 						setMessages(prev => {
 							const copy = [...prev];
-							copy[copy.length - 1] = { role: 'assistant', content: assistantDraft.content };
+							copy[copy.length - 1] = { ...assistantDraft };
 							return copy;
 						});
 					}
@@ -97,7 +100,11 @@ export const AiChatUnified: React.FC = () => {
 				if (!(canUseStream && stream)) {
 					setMessages(prev => {
 						const copy = [...prev];
-						copy[copy.length - 1] = { role: 'assistant', content: result.content };
+						copy[copy.length - 1] = {
+							role: 'assistant',
+							content: result.content,
+							reasoning_content: result.reasoning_content,
+						};
 						return copy;
 					});
 				}
@@ -111,9 +118,12 @@ export const AiChatUnified: React.FC = () => {
 					stream: canUseStream ? stream : false,
 					onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 						assistantDraft.content = m.content;
+						if (m.reasoning_content) {
+							assistantDraft.reasoning_content = m.reasoning_content;
+						}
 						setMessages(prev => {
 							const copy = [...prev];
-							copy[copy.length - 1] = { role: 'assistant', content: assistantDraft.content };
+							copy[copy.length - 1] = { ...assistantDraft };
 							return copy;
 						});
 					}
@@ -204,6 +214,14 @@ export const AiChatUnified: React.FC = () => {
 							<div className="text-xs opacity-70 mb-1">{
 								m.role === 'user' ? '用户' : m.role === 'assistant' ? 'AI助手' : '系统'
 							}</div>
+							{(m as any).reasoning_content && (
+								<div className="mb-2 pb-2 border-b border-gray-200/60">
+									<h4 className="text-xs font-semibold text-gray-500 mb-1 opacity-80">思考过程</h4>
+									<div className="text-xs text-gray-600 whitespace-pre-wrap max-h-40 overflow-auto">
+										{(m as any).reasoning_content}
+									</div>
+								</div>
+							)}
 							<div className="whitespace-pre-wrap text-sm leading-relaxed">{m.content || (loading && i === messages.length - 1 ? '正在思考...' : '')}</div>
 						</div>
 					</div>
