@@ -1,6 +1,7 @@
 export type ChatMessage = {
 	role: 'user' | 'assistant' | 'system';
 	content: string;
+	reasoning_content?: string;
 };
 
 type CallParams = {

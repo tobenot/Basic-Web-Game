@@ -41,23 +41,17 @@ export const AiChatUnified: React.FC = () => {
 	const [loading, setLoading] = React.useState(false);
 	const [error, setError] = React.useState('');
 	const [stream, setStream] = React.useState(true);
+	const [thinking, setThinking] = React.useState(true);
 	const abortRef = React.useRef<AbortController | null>(null);
 	const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
 	const selectedModelOption = MODEL_OPTIONS.find(option => option.value === model);
 	const isGeminiModel = selectedModelOption?.provider === 'google';
-	const canUseStream = !isGeminiModel;
 
 	React.useEffect(() => {
 		const url = import.meta.env.VITE_AI_API_URL || '';
 		setApiUrl(url);
 	}, []);
-
-	React.useEffect(() => {
-		if (isGeminiModel && stream) {
-			setStream(false);
-		}
-	}, [isGeminiModel, stream]);
 
 	React.useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -78,13 +72,20 @@ export const AiChatUnified: React.FC = () => {
 		const assistantDraft: ChatMessage & { reasoning_content?: string } = { role: 'assistant', content: '' };
 		setMessages(prev => [...prev, assistantDraft]);
 
+		let finalModel = model;
+		const isGemini = MODEL_OPTIONS.find(o => o.value === model)?.provider === 'google';
+		if (isGemini) {
+			if (stream) finalModel = `${finalModel}-streaming`;
+			if (thinking) finalModel = `${finalModel}:thinking`;
+		}
+
 		try {
 			if (useBackend) {
 				const result = await callBackendAi({
-					model,
+					model: finalModel,
 					messages: nextMessages,
 					signal: controller.signal,
-					stream: canUseStream ? stream : false,
+					stream,
 					onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 						assistantDraft.content = m.content;
 						if (m.reasoning_content) {
@@ -97,7 +98,7 @@ export const AiChatUnified: React.FC = () => {
 						});
 					}
 				});
-				if (!(canUseStream && stream)) {
+				if (!stream) {
 					setMessages(prev => {
 						const copy = [...prev];
 						copy[copy.length - 1] = {
@@ -112,10 +113,10 @@ export const AiChatUnified: React.FC = () => {
 				await callAiModel({
 					apiUrl,
 					apiKey,
-					model,
+					model: finalModel,
 					messages: nextMessages,
 					signal: controller.signal,
-					stream: canUseStream ? stream : false,
+					stream,
 					onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 						assistantDraft.content = m.content;
 						if (m.reasoning_content) {
@@ -192,12 +193,19 @@ export const AiChatUnified: React.FC = () => {
 							</option>
 						))}
 					</select>
-					<label className="flex items-center gap-2 text-sm px-3 py-2">
-						<input type="checkbox" checked={stream} onChange={(e) => setStream(e.target.checked)} 
-							disabled={!canUseStream} className="rounded" />
-						<span className={!canUseStream ? 'text-gray-400' : ''}>流式</span>
-						{!canUseStream && <span className="text-xs text-amber-600">(Gemini不支持)</span>}
-					</label>
+					<div className="flex items-center gap-4 text-sm px-3 py-2">
+						<label className="flex items-center gap-2">
+							<input type="checkbox" checked={stream} onChange={(e) => setStream(e.target.checked)} 
+								className="rounded" />
+							<span>流式</span>
+						</label>
+						<label className="flex items-center gap-2">
+							<input type="checkbox" checked={thinking} onChange={(e) => setThinking(e.target.checked)}
+								disabled={!isGeminiModel} className="rounded" />
+							<span className={!isGeminiModel ? 'text-gray-400' : ''}>思考</span>
+							{!isGeminiModel && <span className="text-xs text-amber-600">(Gemini独占)</span>}
+						</label>
+					</div>
 				</div>
 			</div>
 			
