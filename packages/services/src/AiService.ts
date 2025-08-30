@@ -35,24 +35,37 @@ export async function callAiModel({ apiUrl, apiKey, model, messages, temperature
 		return newMessage;
 	}
 	const newMessage = { role: 'assistant' as const, content: '', reasoning_content: '', timestamp: new Date().toISOString() };
-	const reader = response.body?.getReader();
-	if (!reader) return newMessage;
+	if (!response.body) return newMessage;
+	const reader = response.body.getReader();
 	const decoder = new TextDecoder();
+	let buffer = '';
 	while (true) {
 		const { done, value } = await reader.read();
 		if (done) break;
-		const chunk = decoder.decode(value);
-		const lines = chunk.split('\n').filter(l => l.trim());
-		for (const line of lines) {
-			if (line === 'data: [DONE]') continue;
+		if (!value) continue;
+		buffer += decoder.decode(value, { stream: true });
+		let idx;
+		while ((idx = buffer.indexOf('\n')) >= 0) {
+			const line = buffer.slice(0, idx).trim();
+			buffer = buffer.slice(idx + 1);
+			if (!line.startsWith('data:')) continue;
+			const data = line.slice(5).trim();
+			if (data === '[DONE]') break;
 			try {
-				const jsonStr = line.replace('data: ', '');
-				if (!jsonStr.trim()) continue;
-				const data = JSON.parse(jsonStr);
-				if (data.choices?.[0]?.delta?.reasoning_content !== undefined) newMessage.reasoning_content += data.choices[0].delta.reasoning_content || '';
-				if (data.choices?.[0]?.delta?.content !== undefined) newMessage.content += data.choices[0].delta.content || '';
-				if (onChunk) onChunk(newMessage);
-			} catch {}
+				const json = JSON.parse(data);
+				const delta = json?.choices?.[0]?.delta;
+				if (delta?.reasoning_content) {
+					newMessage.reasoning_content += delta.reasoning_content;
+				}
+				if (delta?.content) {
+					newMessage.content += delta.content;
+				}
+				if (onChunk) {
+					onChunk({ ...newMessage });
+				}
+			} catch (e) {
+				console.error('Error parsing SSE chunk', e);
+			}
 		}
 	}
 	return newMessage;
@@ -96,24 +109,37 @@ export async function callBackendAi({ model, messages, signal, onChunk, stream =
         return newMessage;
     }
 	const newMessage = { role: 'assistant' as const, content: '', reasoning_content: '', timestamp: new Date().toISOString() };
-	const reader = response.body?.getReader();
-	if (!reader) return newMessage;
+	if (!response.body) return newMessage;
+	const reader = response.body.getReader();
 	const decoder = new TextDecoder();
+	let buffer = '';
 	while (true) {
 		const { done, value } = await reader.read();
 		if (done) break;
-		const chunk = decoder.decode(value);
-		const lines = chunk.split('\n').filter(l => l.trim());
-		for (const line of lines) {
-			if (line === 'data: [DONE]') continue;
+		if (!value) continue;
+		buffer += decoder.decode(value, { stream: true });
+		let idx;
+		while ((idx = buffer.indexOf('\n')) >= 0) {
+			const line = buffer.slice(0, idx).trim();
+			buffer = buffer.slice(idx + 1);
+			if (!line.startsWith('data:')) continue;
+			const data = line.slice(5).trim();
+			if (data === '[DONE]') break;
 			try {
-				const jsonStr = line.replace('data: ', '');
-				if (!jsonStr.trim()) continue;
-				const data = JSON.parse(jsonStr);
-				if (data.choices?.[0]?.delta?.reasoning_content !== undefined) newMessage.reasoning_content += data.choices[0].delta.reasoning_content || '';
-				if (data.choices?.[0]?.delta?.content !== undefined) newMessage.content += data.choices[0].delta.content || '';
-				if (onChunk) onChunk(newMessage);
-			} catch {}
+				const json = JSON.parse(data);
+				const delta = json?.choices?.[0]?.delta;
+				if (delta?.reasoning_content) {
+					newMessage.reasoning_content += delta.reasoning_content;
+				}
+				if (delta?.content) {
+					newMessage.content += delta.content;
+				}
+				if (onChunk) {
+					onChunk({ ...newMessage });
+				}
+			} catch (e) {
+				console.error('Error parsing SSE chunk', e);
+			}
 		}
 	}
 	return newMessage;

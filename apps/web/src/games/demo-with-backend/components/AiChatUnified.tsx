@@ -1,5 +1,6 @@
 import React from 'react';
 import { callAiModel, callBackendAi, type ChatMessage } from '@services/AiService';
+import { useAuth } from '../hooks/useAuth';
 
 const MODEL_OPTIONS = [
 	{ value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'google', inputPricePerMillionTokens: 1.25, outputPricePerMillionTokens: 10.00 },
@@ -28,6 +29,9 @@ const MODEL_OPTIONS = [
 ];
 
 export const AiChatUnified: React.FC = () => {
+	const { user } = useAuth();
+	const isLoggedIn = !!user;
+
 	const [useBackend, setUseBackend] = React.useState(true);
 	const [apiUrl, setApiUrl] = React.useState('');
 	const [apiKey, setApiKey] = React.useState('');
@@ -132,7 +136,7 @@ export const AiChatUnified: React.FC = () => {
 		setError('');
 	};
 
-	const canSend = useBackend || (apiUrl && apiKey);
+	const canSend = (useBackend && isLoggedIn) || (!useBackend && apiUrl && apiKey);
 
 	return (
 		<div className="bg-white border rounded-lg p-4 sm:p-6 space-y-4">
@@ -150,8 +154,9 @@ export const AiChatUnified: React.FC = () => {
 			<div className="space-y-3">
 				<div className="flex items-center gap-4">
 					<label className="flex items-center gap-2 text-sm">
-						<input type="radio" name="mode" checked={useBackend} onChange={() => setUseBackend(true)} />
-						<span>使用后端代理</span>
+						<input type="radio" name="mode" checked={useBackend} onChange={() => setUseBackend(true)} disabled={!isLoggedIn} />
+						<span className={!isLoggedIn ? 'text-gray-400' : ''}>使用后端代理</span>
+						{!isLoggedIn && <span className="text-xs text-amber-600">(需要登录)</span>}
 					</label>
 					<label className="flex items-center gap-2 text-sm">
 						<input type="radio" name="mode" checked={!useBackend} onChange={() => setUseBackend(false)} />
