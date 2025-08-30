@@ -35,6 +35,28 @@ export const useAuth = () => {
 		}
 	};
 
+	const requestVerificationCode = async (email: string) => {
+		try {
+			// 使用融合邮件接口，同时发送魔法链接和验证码
+			const result = await (trpc as any).auth.requestLoginLink.mutate({ email });
+			return { success: true, challengeId: result.challengeId };
+		} catch (error) {
+			return { success: false, error: error instanceof Error ? error.message : '发送验证码失败' };
+		}
+	};
+
+	const verifyCode = async (challengeId: string, code: string) => {
+		try {
+			const result = await (trpc as any).auth.verifyEmailCode.mutate({ challengeId, code });
+			localStorage.setItem('sessionToken', result.sessionToken);
+			const payload = JSON.parse(atob(result.sessionToken.split('.')[1]));
+			setUser({ userId: payload.userId });
+			return { success: true };
+		} catch (error) {
+			return { success: false, error: error instanceof Error ? error.message : '验证码验证失败' };
+		}
+	};
+
 	const verifyToken = async (token: string) => {
 		try {
 			const result = await (trpc as any).auth.verifyMagicToken.query({ token });
@@ -56,6 +78,8 @@ export const useAuth = () => {
 		user,
 		isLoading,
 		login,
+		requestVerificationCode,
+		verifyCode,
 		verifyToken,
 		logout,
 	};
