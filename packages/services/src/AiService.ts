@@ -84,17 +84,25 @@ type BackendCallParams = {
 	signal?: AbortSignal;
 	onChunk?: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => void;
     stream?: boolean;
+	featurePassword?: string;
 };
 
-export async function callBackendAi({ model, messages, signal, onChunk, stream = true }: BackendCallParams) {
+export async function callBackendAi({ model, messages, signal, onChunk, stream = true, featurePassword }: BackendCallParams) {
 	const baseUrl = getBackendBaseUrl();
 	const token = typeof window !== 'undefined' ? localStorage.getItem('sessionToken') : null;
+	
+	const headers: Record<string, string> = {
+		'Content-Type': 'application/json',
+		...(token ? { Authorization: `Bearer ${token}` } : {})
+	};
+	
+	if (featurePassword) {
+		headers['X-Feature-Password'] = featurePassword;
+	}
+	
 	const response = await fetch(`${baseUrl}/api/v1/chat/completions`, {
 		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			...(token ? { Authorization: `Bearer ${token}` } : {})
-		},
+		headers,
 		signal,
         body: JSON.stringify({ model, messages, stream })
 	});

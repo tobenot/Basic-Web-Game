@@ -35,6 +35,7 @@ export const AiChatUnified: React.FC = () => {
 	const [useBackend, setUseBackend] = React.useState(true);
 	const [apiUrl, setApiUrl] = React.useState('');
 	const [apiKey, setApiKey] = React.useState('');
+	const [featurePassword, setFeaturePassword] = React.useState('');
 	const [model, setModel] = React.useState('gemini-2.5-flash');
 	const [messages, setMessages] = React.useState<ChatMessage[]>([{ role: 'system', content: 'You are a helpful assistant.' }]);
 	const [input, setInput] = React.useState('');
@@ -60,6 +61,7 @@ export const AiChatUnified: React.FC = () => {
 	const onSend = async () => {
 		if (loading) return;
 		if (!useBackend && (!apiUrl || !apiKey)) return;
+		if (useBackend && !featurePassword.trim()) return;
 		if (!input.trim()) return;
 
 		const nextMessages = [...messages, { role: 'user', content: input.trim() } as ChatMessage];
@@ -86,6 +88,7 @@ export const AiChatUnified: React.FC = () => {
 					messages: nextMessages,
 					signal: controller.signal,
 					stream,
+					featurePassword: featurePassword.trim(),
 					onChunk: (m: { role: 'assistant'; content: string; reasoning_content: string; timestamp: string }) => {
 						assistantDraft.content = m.content;
 						if (m.reasoning_content) {
@@ -147,7 +150,7 @@ export const AiChatUnified: React.FC = () => {
 		setError('');
 	};
 
-	const canSend = (useBackend && isLoggedIn) || (!useBackend && apiUrl && apiKey);
+	const canSend = (useBackend && isLoggedIn && featurePassword.trim()) || (!useBackend && apiUrl && apiKey);
 
 	return (
 		<div className="bg-white border rounded-lg p-4 sm:p-6 space-y-4">
@@ -174,6 +177,14 @@ export const AiChatUnified: React.FC = () => {
 						<span>直接调用 API</span>
 					</label>
 				</div>
+				
+				{useBackend && (
+					<div className="grid grid-cols-1 gap-3">
+						<input className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary" 
+							placeholder="功能密码 (必填)" type="password"
+							value={featurePassword} onChange={(e) => setFeaturePassword(e.target.value)} />
+					</div>
+				)}
 				
 				{!useBackend && (
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
