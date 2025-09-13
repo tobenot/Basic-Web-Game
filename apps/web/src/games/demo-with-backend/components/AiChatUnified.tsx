@@ -3,29 +3,33 @@ import { callAiModel, callBackendAi, type ChatMessage } from '@services/AiServic
 import { useAuth } from '../hooks/useAuth';
 
 const MODEL_OPTIONS = [
-	{ value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'google', inputPricePerMillionTokens: 1.25, outputPricePerMillionTokens: 10.00 },
-	{ value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash', provider: 'google', inputPricePerMillionTokens: 0.30, outputPricePerMillionTokens: 2.50 },
-	{ value: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash-Lite', provider: 'google', inputPricePerMillionTokens: 0.10, outputPricePerMillionTokens: 0.40 },
-	{ value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash', provider: 'google', inputPricePerMillionTokens: 0.10, outputPricePerMillionTokens: 0.40 },
-	{ value: 'gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash-Lite', provider: 'google', inputPricePerMillionTokens: 0.075, outputPricePerMillionTokens: 0.30 },
-	{ value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro', provider: 'google', inputPricePerMillionTokens: 1.25, outputPricePerMillionTokens: 5.00 },
-	{ value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash', provider: 'google', inputPricePerMillionTokens: 0.075, outputPricePerMillionTokens: 0.30 },
-	{ value: 'gemini-1.5-flash-8b', label: 'Gemini 1.5 Flash-8B', provider: 'google', inputPricePerMillionTokens: 0.0375, outputPricePerMillionTokens: 0.15 },
+	{ value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro (Google)', provider: 'google', inputPricePerMillionTokens: 1.25, outputPricePerMillionTokens: 10.00 },
+	{ value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash (Google)', provider: 'google', inputPricePerMillionTokens: 0.30, outputPricePerMillionTokens: 2.50 },
+	{ value: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash-Lite (Google)', provider: 'google', inputPricePerMillionTokens: 0.10, outputPricePerMillionTokens: 0.40 },
+	{ value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash (Google)', provider: 'google', inputPricePerMillionTokens: 0.10, outputPricePerMillionTokens: 0.40 },
+	{ value: 'gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash-Lite (Google)', provider: 'google', inputPricePerMillionTokens: 0.075, outputPricePerMillionTokens: 0.30 },
+	{ value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro (Google)', provider: 'google', inputPricePerMillionTokens: 1.25, outputPricePerMillionTokens: 5.00 },
+	{ value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash (Google)', provider: 'google', inputPricePerMillionTokens: 0.075, outputPricePerMillionTokens: 0.30 },
+	{ value: 'gemini-1.5-flash-8b', label: 'Gemini 1.5 Flash-8B (Google)', provider: 'google', inputPricePerMillionTokens: 0.0375, outputPricePerMillionTokens: 0.15 },
 
-	{ value: 'deepseek-chat', label: 'DeepSeek Chat', provider: 'deepseek' },
-	{ value: 'deepseek-reasoner', label: 'DeepSeek Reasoner', provider: 'deepseek' },
+	{ value: 'deepseek/deepseek-chat', label: 'DeepSeek Chat (DeepSeek)', provider: 'deepseek' },
+	{ value: 'deepseek/deepseek-reasoner', label: 'DeepSeek Reasoner (DeepSeek)', provider: 'deepseek' },
 
-	{ value: 'gpt-4o', label: 'GPT-4o', provider: 'openai', inputPricePerMillionTokens: 5.00, outputPricePerMillionTokens: 20.00 },
-	{ value: 'gpt-4o-mini', label: 'GPT-4o Mini', provider: 'openai', inputPricePerMillionTokens: 0.60, outputPricePerMillionTokens: 2.40 },
-	{ value: 'gpt-5', label: 'GPT-5', provider: 'openai', inputPricePerMillionTokens: 1.250, outputPricePerMillionTokens: 10.000 },
-	{ value: 'gpt-5-mini', label: 'GPT-5 Mini', provider: 'openai', inputPricePerMillionTokens: 0.250, outputPricePerMillionTokens: 2.000 },
-	{ value: 'gpt-5-nano', label: 'GPT-5 Nano', provider: 'openai', inputPricePerMillionTokens: 0.050, outputPricePerMillionTokens: 0.400 },
+	{ value: 'openai/gpt-4o', label: 'GPT-4o (OpenAI)', provider: 'openai', inputPricePerMillionTokens: 5.00, outputPricePerMillionTokens: 20.00 },
+	{ value: 'openai/gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)', provider: 'openai', inputPricePerMillionTokens: 0.60, outputPricePerMillionTokens: 2.40 },
+	{ value: 'openai/gpt-5', label: 'GPT-5 (OpenAI)', provider: 'openai', inputPricePerMillionTokens: 1.250, outputPricePerMillionTokens: 10.000 },
+	{ value: 'openai/gpt-5-mini', label: 'GPT-5 Mini (OpenAI)', provider: 'openai', inputPricePerMillionTokens: 0.250, outputPricePerMillionTokens: 2.000 },
+	{ value: 'openai/gpt-5-nano', label: 'GPT-5 Nano (OpenAI)', provider: 'openai', inputPricePerMillionTokens: 0.050, outputPricePerMillionTokens: 0.400 },
 
-	{ value: 'claude-opus-4.1', label: 'Claude Opus 4.1', provider: 'anthropic', inputPricePerMillionTokens: 15.00, outputPricePerMillionTokens: 75.00 },
-	{ value: 'claude-opus-4', label: 'Claude Opus 4', provider: 'anthropic', inputPricePerMillionTokens: 15.00, outputPricePerMillionTokens: 75.00 },
-	{ value: 'claude-sonnet-4', label: 'Claude Sonnet 4', provider: 'anthropic', inputPricePerMillionTokens: 3.00, outputPricePerMillionTokens: 15.00 },
-	{ value: 'claude-sonnet-3.7', label: 'Claude Sonnet 3.7', provider: 'anthropic', inputPricePerMillionTokens: 3.00, outputPricePerMillionTokens: 15.00 },
-	{ value: 'claude-3.5-haiku', label: 'Claude 3.5 Haiku', provider: 'anthropic', inputPricePerMillionTokens: 0.80, outputPricePerMillionTokens: 4.00 },
+	{ value: 'openrouter/anthropic/claude-opus-4.1', label: 'Claude Opus 4.1 (OpenRouter)', provider: 'anthropic', inputPricePerMillionTokens: 15.00, outputPricePerMillionTokens: 75.00 },
+	{ value: 'openrouter/anthropic/claude-opus-4', label: 'Claude Opus 4 (OpenRouter)', provider: 'anthropic', inputPricePerMillionTokens: 15.00, outputPricePerMillionTokens: 75.00 },
+	{ value: 'openrouter/anthropic/claude-sonnet-4', label: 'Claude Sonnet 4 (OpenRouter)', provider: 'anthropic', inputPricePerMillionTokens: 3.00, outputPricePerMillionTokens: 15.00 },
+	{ value: 'openrouter/anthropic/claude-sonnet-3.7', label: 'Claude Sonnet 3.7 (OpenRouter)', provider: 'anthropic', inputPricePerMillionTokens: 3.00, outputPricePerMillionTokens: 15.00 },
+	{ value: 'openrouter/anthropic/claude-3.5-haiku', label: 'Claude 3.5 Haiku (OpenRouter)', provider: 'anthropic', inputPricePerMillionTokens: 0.80, outputPricePerMillionTokens: 4.00 },
+	{ value: 'openrouter/openai/gpt-4o', label: 'GPT-4o (OpenRouter)', provider: 'openai', inputPricePerMillionTokens: 5.00, outputPricePerMillionTokens: 20.00 },
+	{ value: 'openrouter/openai/gpt-4o-mini', label: 'GPT-4o Mini (OpenRouter)', provider: 'openai', inputPricePerMillionTokens: 0.60, outputPricePerMillionTokens: 2.40 },
+	{ value: 'openrouter/google/gemini-2.5-pro', label: 'Gemini 2.5 Pro (OpenRouter)', provider: 'google', inputPricePerMillionTokens: 1.25, outputPricePerMillionTokens: 10.00 },
+	{ value: 'openrouter/google/gemini-2.5-flash', label: 'Gemini 2.5 Flash (OpenRouter)', provider: 'google', inputPricePerMillionTokens: 0.30, outputPricePerMillionTokens: 2.50 },
 ];
 
 export const AiChatUnified: React.FC = () => {
@@ -75,7 +79,8 @@ export const AiChatUnified: React.FC = () => {
 		setMessages(prev => [...prev, assistantDraft]);
 
 		let finalModel = model;
-		const isGemini = MODEL_OPTIONS.find(o => o.value === model)?.provider === 'google';
+		const selectedOption = MODEL_OPTIONS.find(o => o.value === model);
+		const isGemini = selectedOption?.provider === 'google';
 		if (isGemini) {
 			if (stream) finalModel = `${finalModel}-streaming`;
 			if (thinking) finalModel = `${finalModel}:thinking`;
