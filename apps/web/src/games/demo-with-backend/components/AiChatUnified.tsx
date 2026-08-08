@@ -47,6 +47,8 @@ export const AiChatUnified: React.FC = () => {
 	const [error, setError] = React.useState('');
 	const [stream, setStream] = React.useState(true);
 	const [thinking, setThinking] = React.useState(true);
+	// 后端限流 429 后冷却 30 秒,期间禁止发送
+	const [cooldownUntil, setCooldownUntil] = React.useState(0);
 	const abortRef = React.useRef<AbortController | null>(null);
 	const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
@@ -64,6 +66,11 @@ export const AiChatUnified: React.FC = () => {
 
 	const onSend = async () => {
 		if (loading) return;
+		const cooldownRemaining = cooldownUntil - Date.now();
+		if (cooldownRemaining > 0) {
+			setError(`请求过于频繁，请 ${Math.ceil(cooldownRemaining / 1000)} 秒后再试。`);
+			return;
+		}
 		if (!useBackend && (!apiUrl || !apiKey)) return;
 		if (useBackend && !featurePassword.trim()) return;
 		if (!input.trim()) return;
@@ -139,7 +146,10 @@ export const AiChatUnified: React.FC = () => {
 				});
 			}
 		} catch (e) {
-			setError(e instanceof Error ? e.message : '调用失败');
+			const msg = e instanceof Error ? e.message : '调用失败';
+			// 429 限流:进入 30 秒冷却,不要立刻重试
+			if (msg.includes('请求过于频繁')) setCooldownUntil(Date.now() + 30_000);
+			setError(msg);
 		} finally {
 			setLoading(false);
 			abortRef.current = null;

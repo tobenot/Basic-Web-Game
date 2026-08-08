@@ -108,6 +108,10 @@ export async function callBackendAi({ model, messages, signal, onChunk, stream =
 	});
 	if (!response.ok) {
 		const errorText = await response.text();
+		// 429 限流:给明确提示,不要当模型调用失败处理
+		if (response.status === 429) {
+			throw new Error('请求过于频繁，请稍后再试。');
+		}
 		throw new Error(`AI后端请求失败: ${response.status} - ${errorText}`);
 	}
     if (!stream) {

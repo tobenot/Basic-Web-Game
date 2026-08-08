@@ -8,6 +8,7 @@ import { GameShell } from '@ui/GameShell';
 export const DemoWithBackend: React.FC = () => {
     const { user, isLoading, verifyToken, logout } = useAuth();
 	const [verifying, setVerifying] = React.useState(false);
+	const [verifyError, setVerifyError] = React.useState('');
 
 	// 添加环境变量调试信息
 	React.useEffect(() => {
@@ -28,7 +29,11 @@ export const DemoWithBackend: React.FC = () => {
 		const token = url.searchParams.get('token');
 		if (token) {
 			setVerifying(true);
-			verifyToken(token).finally(() => {
+			setVerifyError('');
+			verifyToken(token).then(result => {
+				// 校验失败要明确提示,不要把限流/验证失败都静默吞掉
+				if (!result.success) setVerifyError(result.error ?? '');
+			}).finally(() => {
 				// 清理 URL 中的 token 参数
 				url.searchParams.delete('token');
 				window.history.replaceState({}, '', url.toString());
@@ -53,7 +58,7 @@ export const DemoWithBackend: React.FC = () => {
 
     return (
 		<GameShell orientation="landscape">
-            {user ? <Dashboard user={user} onLogout={logout} /> : <LoginScreen />}
+            {user ? <Dashboard user={user} onLogout={logout} /> : <LoginScreen initialError={verifyError} />}
 			<DebugInfo />
 		</GameShell>
 	);

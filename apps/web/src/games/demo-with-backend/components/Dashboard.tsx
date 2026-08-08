@@ -88,7 +88,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'overview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('overview')}>概览</button>
 							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'user' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('user')}>用户信息</button>
                             <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'echo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('echo')}>Echo 示例</button>
-                            <button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'cors' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('cors')}>CORS 调试</button>
+                            {import.meta.env.DEV && (
+								<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'cors' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('cors')}>CORS 调试</button>
+                            )}
                             							<button className={`whitespace-nowrap py-2 border-b-2 font-medium text-sm ${activeTab === 'ai' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('ai')}>AI 聊天</button>
 						</nav>
 					</div>
@@ -144,7 +146,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 						</div>
 					)}
 
-                    {activeTab === 'cors' && (
+                    {import.meta.env.DEV && activeTab === 'cors' && (
                         <CorsDebugPanel />
                     )}
 
@@ -188,8 +190,11 @@ const CorsDebugPanel: React.FC = () => {
 	const getConfig = async () => {
 		setLoading('cfg');
 		try {
-			const res = await trpc.corsDebug.getConfig.query();
+			// corsDebug 生产环境不注册,仅在开发环境调用;访问失败也要能展示错误
+			const res = await (trpc as any).corsDebug.getConfig.query();
 			setConfigText(JSON.stringify(res, null, 2));
+		} catch (e) {
+			setConfigText('调用失败: ' + (e instanceof Error ? e.message : '未知错误'));
 		} finally {
 			setLoading(null);
 		}
@@ -198,8 +203,10 @@ const CorsDebugPanel: React.FC = () => {
 	const testOrigin = async () => {
 		setLoading('origin');
 		try {
-			const res = await trpc.corsDebug.testOrigin.query({ origin: window.location.origin });
+			const res = await (trpc as any).corsDebug.testOrigin.query({ origin: window.location.origin });
 			setOriginText(JSON.stringify(res, null, 2));
+		} catch (e) {
+			setOriginText('调用失败: ' + (e instanceof Error ? e.message : '未知错误'));
 		} finally {
 			setLoading(null);
 		}
@@ -208,8 +215,10 @@ const CorsDebugPanel: React.FC = () => {
 	const health = async () => {
 		setLoading('health');
 		try {
-			const res = await trpc.corsDebug.health.query();
+			const res = await (trpc as any).corsDebug.health.query();
 			setHealthText(JSON.stringify(res, null, 2));
+		} catch (e) {
+			setHealthText('调用失败: ' + (e instanceof Error ? e.message : '未知错误'));
 		} finally {
 			setLoading(null);
 		}

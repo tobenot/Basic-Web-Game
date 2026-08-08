@@ -4,11 +4,16 @@ import { BackendStatus } from './BackendStatus';
 
 type LoginMethod = 'magic-link' | 'verification-code';
 
-export const LoginScreen: React.FC = () => {
+type LoginScreenProps = {
+	// 魔法链接回调校验失败的提示(限流/链接失效等),展示在登录页
+	initialError?: string;
+};
+
+export const LoginScreen: React.FC<LoginScreenProps> = ({ initialError = '' }) => {
 	const [email, setEmail] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useState(initialError);
 	const [loginMethod, setLoginMethod] = useState<LoginMethod>('magic-link');
 	const [showCodeInput, setShowCodeInput] = useState(false);
 	const [challengeId, setChallengeId] = useState<string>('');
@@ -232,8 +237,8 @@ export const LoginScreen: React.FC = () => {
 
 				{message && (
 					<div className={`mt-4 p-3 sm:p-4 rounded-lg text-sm sm:text-base ${
-						message.includes('失败') || message.includes('错误')
-							? 'bg-red-50 text-red-700 border border-red-200' 
+						/失败|错误|频繁|稍后再试|次数过多/.test(message)
+							? 'bg-red-50 text-red-700 border border-red-200'
 							: 'bg-green-50 text-green-700 border border-green-200'
 					}`}>
 						{message}
